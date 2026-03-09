@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eoria Apps | MedTech Publisher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #e0e5ec;
+            --text-color: #44475a;
+            --accent-color: #007AFF;
+            --shadow-light: -9px -9px 16px rgba(255, 255, 255, 1);
+            --shadow-dark: 9px 9px 16px rgba(163, 177, 198, 0.6);
+            --shadow-inset: inset 6px 6px 12px rgba(163, 177, 198, 0.5), 
+                            inset -6px -6px 12px rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .logo-box {
+            display: inline-block;
+            padding: 20px 40px;
+            border-radius: 30px;
+            background: var(--bg-color);
+            box-shadow: var(--shadow-light), var(--shadow-dark);
+            margin-bottom: 50px;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+
+        .logo-box span {
+            color: var(--accent-color);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 1.1rem;
+            opacity: 0.7;
+            line-height: 1.6;
+            margin-bottom: 50px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            text-decoration: none;
+            background: var(--bg-color);
+            padding: 22px 50px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            box-shadow: var(--shadow-light), var(--shadow-dark);
+            transition: all 0.2s ease;
+        }
+
+        .cta-button:active {
+            box-shadow: var(--shadow-inset);
+            transform: scale(0.97);
+        }
+
+        footer {
+            position: absolute;
+            bottom: 30px;
+            font-size: 0.8rem;
+            opacity: 0.4;
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; }
+            .logo-box { padding: 15px 30px; font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-box">
+            Eoria<span>Apps</span>
+        </div>
+
+        <h1>Next-Gen MedTech</h1>
+        <p>Publishing premium digital solutions for health, longevity, and mental well-being.</p>
+
+        <a href="https://www.apple.com/app-store/" class="cta-button">Go to App Store</a>
+    </div>
+
+    <footer>
+        &copy; 2026 Eoria Apps
+    </footer>
+
+</body>
+</html>
