@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>AI Mole Scanner | Advanced Skin Health Monitoring by Eoria Apps</title>
+    <meta name="description" content="Discover AI Mole Scanner. Use professional-grade AI technology for early skin spot analysis and dermatology tracking. Powered by Eoria Apps.">
+    <meta name="keywords" content="AI mole scanner, skin cancer detection app, dermatology AI, melanoma tracking, Eoria Apps health">
+    
+    <meta property="og:title" content="AI Mole Scanner - Smart Skin Analysis">
+    <meta property="og:description" content="Professional AI-driven skin health monitoring at your fingertips.">
+    <meta property="og:type" content="website">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #e0e5ec;
+            --text-color: #44475a;
+            --accent-color: #007AFF;
+            --shadow-light: -9px -9px 16px rgba(255, 255, 255, 1);
+            --shadow-dark: 9px 9px 16px rgba(163, 177, 198, 0.6);
+            --shadow-inset: inset 6px 6px 12px rgba(163, 177, 198, 0.5), 
+                            inset -6px -6px 12px rgba(255, 255, 255, 0.8);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; color: var(--text-color); overflow-x: hidden; }
+
+        /* Navigation */
+        nav { padding: 25px; display: flex; justify-content: center; position: sticky; top: 0; background: var(--bg-color); z-index: 100; }
+        .nav-inner { width: 100%; max-width: 1200px; display: flex; justify-content: space-between; align-items: center; }
+        .back-link { text-decoration: none; color: var(--text-color); font-weight: 600; padding: 10px 20px; border-radius: 12px; box-shadow: var(--shadow-light), var(--shadow-dark); }
+
+        /* 1. Header with Graphics (Hero) */
+        .hero { padding: 80px 20px; text-align: center; }
+        .hero-graphic {
+            width: 280px; height: 280px; margin: 0 auto 40px;
+            background: var(--bg-color); border-radius: 60px;
+            box-shadow: var(--shadow-light), var(--shadow-dark);
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .pulse-circle {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: var(--bg-color); box-shadow: var(--shadow-inset);
+            display: flex; align-items: center; justify-content: center; font-size: 3rem;
+        }
+        .scanner-line {
+            position: absolute; width: 100%; height: 4px; background: var(--accent-color);
+            top: 50%; opacity: 0.5; box-shadow: 0 0 15px var(--accent-color);
+            animation: scan 3s infinite ease-in-out;
+        }
+        @keyframes scan { 0%, 100% { top: 20%; } 50% { top: 80%; } }
+
+        h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -2px; }
+
+        /* 2. Description Section */
+        .section-desc { max-width: 800px; margin: 0 auto 100px; text-align: center; padding: 0 20px; }
+        .section-desc p { font-size: 1.2rem; line-height: 1.8; opacity: 0.8; }
+
+        /* 3. Technology Description */
+        .tech-box { max-width: 1100px; margin: 0 auto 100px; padding: 20px; }
+        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .card { padding: 40px; border-radius: 35px; box-shadow: var(--shadow-light), var(--shadow-dark); background: var(--bg-color); }
+        .card h3 { margin-bottom: 15px; font-size: 1.5rem; color: var(--accent-color); }
+
+        /* 4. Tech Links (List) */
+        .tech-links { text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.1); border-radius: 50px; margin: 0 20px 100px; box-shadow: var(--shadow-inset); }
+        .tech-links h2 { margin-bottom: 30px; }
+        .tag-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+        .tag { padding: 12px 25px; border-radius: 50px; box-shadow: var(--shadow-light), var(--shadow-dark); text-decoration: none; color: var(--text-color); font-size: 0.9rem; font-weight: 600; }
+        .tag:hover { box-shadow: var(--shadow-inset); color: var(--accent-color); }
+
+        /* 5. Visual Footer Graphic */
+        .footer-graphic { padding: 100px 20px; text-align: center; }
+        .app-preview-container { 
+            max-width: 900px; margin: 0 auto; padding: 60px; border-radius: 50px;
+            box-shadow: var(--shadow-light), var(--shadow-dark);
+        }
+        .cta-btn { 
+            display: inline-block; margin-top: 40px; padding: 25px 60px; 
+            background: var(--bg-color); border-radius: 50px; 
+            box-shadow: var(--shadow-light), var(--shadow-dark);
+            text-decoration: none; color: var(--accent-color); font-weight: 800; font-size: 1.3rem;
+            transition: 0.3s;
+        }
+        .cta-btn:active { box-shadow: var(--shadow-inset); transform: scale(0.98); }
+
+        footer { padding: 50px; text-align: center; opacity: 0.4; font-size: 0.9rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .hero-graphic { width: 200px; height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="back-link">← Eoria Apps</a>
+            <div class="logo">AI<span>Mole</span></div>
+        </div>
+    </nav>
+
+    <main>
+        <header class="hero">
+            <div class="hero-graphic">
+                <div class="pulse-circle">🔍</div>
+                <div class="scanner-line"></div>
+            </div>
+            <h1>AI Mole Scanner</h1>
+        </header>
+
+        <section class="section-desc">
+            <p>
+                <strong>AI Mole Scanner</strong> is a cutting-edge dermatological tool designed for early monitoring of skin changes. 
+                Using deep learning models, the app allows users to capture high-resolution images of moles and track their 
+                evolution over time, providing a data-driven approach to skin health and melanoma prevention.
+            </p>
+        </section>
+
+        <section class="tech-box">
+            <div class="tech-grid">
+                <article class="card">
+                    <h3>Computer Vision</h3>
+                    <p>Our custom neural networks are trained on 100,000+ clinical images to detect asymmetrical patterns and border irregularities with high precision.</p>
+                </article>
+                <article class="card">
+                    <h3>Privacy First</h3>
+                    <p>All image processing is encrypted. We use on-device processing where possible to ensure your sensitive health data never leaves your control.</p>
+                </article>
+                <article class="card">
+                    <h3>History Tracking</h3>
+                    <p>Compare photos side-by-side using our proprietary alignment technology to notice even the slightest changes in size or color.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="tech-links">
+            <h2>Core Technology Stack</h2>
+            <div class="tag-container">
+                <a href="#" class="tag">TensorFlow ML</a>
+                <a href="#" class="tag">CoreML 3.0</a>
+                <a href="#" class="tag">Computer Vision API</a>
+                <a href="#" class="tag">Python Integration</a>
+                <a href="#" class="tag">Encrypted Cloud Storage</a>
+                <a href="#" class="tag">Dermatoscopic Analysis</a>
+            </div>
+        </section>
+
+        <section class="footer-graphic">
+            <div class="app-preview-container">
+                <h2>Ready to track your health?</h2>
+                <p style="margin-top: 15px;">Join thousands of users prioritizing their skin safety today.</p>
+                <a href="https://apple.com/app-store" class="cta-btn">Go to App Store</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2026 Eoria Apps | AI Mole Scanner Project. For informational purposes only.
+    </footer>
+
+</body>
+</html>
