@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Ссылка на твою карту сайта
+Sitemap: https://aeoria.github.io/sitemap.xml
