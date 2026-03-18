@@ -3,170 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Mole Scanner | Skin Cancer Detector | Eoria Apps</title>
     
-    <title>AI Mole Scanner: The Best Skin Cancer & Melanoma Detector App | Eoria Apps</title>
-    <meta name="description" content="AI Mole Scanner is a professional-grade AI mole detector app. Monitor skin cancer risks, track melanoma symptoms, and perform home skin checks with advanced dermatology AI technology. Your privacy is paramount.">
-    <meta name="keywords" content="ai skin cancer scanner, ai mole detector, mole detector app, melanoma checker, dermatology app, ai skin condition analysis, eoria apps health">
-    <link rel="canonical" href="https://eoria.apps/ai-mole-scanner">
-
-    <meta property="og:title" content="AI Mole Scanner | Smart Skin Cancer Scanner App">
-    <meta property="og:description" content="Use our AI mole detector for professional-grade skin cancer screening at home. Knowledge saves lives.">
-    <meta property="og:image" content="https://eoria.apps/og-image-molescanner.jpg">
+    <meta name="description" content="AI Mole Scanner by Eoria Apps. Use advanced dermatology AI for skin cancer and melanoma detection. Track 50+ skin conditions with professional accuracy.">
+    <meta name="keywords" content="skin cancer, ai mole detector, mole detector app, melanoma checker, dermatology ai, skin check app">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #e0e5ec;
-            --text-color: #44475a;
-            --accent-color: #007AFF;
-            --sh-l: -9px -9px 16px rgba(255, 255, 255, 1);
+            --bg: #e0e5ec;
+            --text: #44475a;
+            --accent: #007AFF;
+            --sh-l: -9px -9px 16px #ffffff;
             --sh-d: 9px 9px 16px rgba(163, 177, 198, 0.6);
-            --sh-inset: inset 6px 6px 12px rgba(163, 177, 198, 0.5), inset -6px -6px 12px rgba(255, 255, 255, 0.8);
+            --sh-inset: inset 6px 6px 12px rgba(163, 177, 198, 0.5), inset -6px -6px 12px #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-        body { background-color: var(--bg-color); font-family: 'Inter', sans-serif; color: var(--text-color); line-height: 1.6; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; color: var(--text); line-height: 1.6; }
 
-        /* Navigation Header */
-        header.app-header { padding: 30px; position: sticky; top: 0; background: var(--bg-color); z-index: 1000; text-align: center; }
-        .back-btn { display: inline-block; padding: 10px 20px; border-radius: 12px; box-shadow: var(--sh-l), var(--sh-d); text-decoration: none; color: var(--text-color); font-weight: 600; margin-bottom: 30px; }
+        /* Navigation */
+        nav {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
 
-        /* 1. HEADER DYNAMIC GRAPHIC (Logo) */
-        .hero-visual { width: 280px; height: 280px; margin: 0 auto 40px; background: var(--bg-color); border-radius: 60px; box-shadow: var(--sh-l), var(--sh-d); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        .mole-shape { width: 100px; height: 110px; background: #5d4037; border-radius: 43% 57% 70% 30% / 30% 45% 55% 70%; filter: blur(2px); opacity: 0.8; box-shadow: inset 10px 10px 20px rgba(0,0,0,0.3); }
-        .scan-bar { position: absolute; width: 100%; height: 2px; background: var(--accent-color); top: 0; box-shadow: 0 0 15px var(--accent-color); animation: moveScan 3s infinite linear; }
-        @keyframes moveScan { 0%, 100% { top: 10%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } }
+        .home-btn {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px 25px;
+            border-radius: 12px;
+            box-shadow: var(--sh-l), var(--sh-d);
+            transition: 0.2s;
+        }
+        .home-btn:active { box-shadow: var(--sh-inset); }
 
-        h1 { font-size: 3rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -2px; }
-        .hero-visual + .app-description { margin-top: 30px; }
+        /* Hero / Logo Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
 
-        /* 2. APP DESCRIPTION SECTION (H1 + P + Not-clickable Categories) */
-        .app-description { max-width: 800px; margin: 0 auto; text-align: center; padding: 0 20px 80px; }
-        .app-description p { font-size: 1.2rem; opacity: 0.8; margin-bottom: 50px; }
-        .highlight { color: var(--accent-color); font-weight: 600; }
+        /* АНИМИРОВАННЫЙ ЛОГОТИП */
+        .logo-container {
+            width: 200px;
+            height: 200px;
+            background: var(--bg);
+            border-radius: 40px;
+            box-shadow: var(--sh-l), var(--sh-d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
 
-        /* 3. TECHNOLOGY DEEP DIVE SECTION (Grid with Labels) */
-        .tech-box { max-width: 1100px; margin: 0 auto; padding: 80px 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; }
-        .neo-card { padding: 40px; border-radius: 40px; background: var(--bg-color); box-shadow: var(--sh-l), var(--sh-d); transition: 0.3s; text-align: left; }
-        .neo-card:hover { transform: translateY(-5px); }
-        .condition-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; padding: 5px 12px; border-radius: 10px; box-shadow: var(--sh-inset); margin-bottom: 20px; font-weight: 600; }
-        .condition-label.malignant { color: #FF3B30; }
-        .neo-card h2 { font-size: 1.5rem; margin-bottom: 15px; }
+        .mole {
+            width: 80px;
+            height: 90px;
+            background: #5d4037;
+            border-radius: 40% 60% 70% 30% / 40% 40% 60% 60%;
+            filter: blur(4px);
+            opacity: 0.7;
+        }
 
-        /* FAQ and CTA Graphics */
-        .faq-graphics, .cta-graphics { text-align: center; margin-bottom: 40px; }
-        .faq-pulse, .app-icon-pulse { animation: pulse 2s infinite ease-in-out; display: inline-block; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: var(--accent);
+            box-shadow: 0 0 15px var(--accent), 0 0 5px var(--accent);
+            top: 0;
+            z-index: 2;
+            animation: scanning 3s infinite ease-in-out;
+        }
 
-        /* FOOTER */
-        footer.app-footer { padding: 50px 20px; text-align: center; opacity: 0.4; font-size: 0.9rem; border-top: 1px solid rgba(0,0,0,0.05); }
+        @keyframes scanning {
+            0%, 100% { top: 5%; opacity: 0.2; }
+            50% { top: 90%; opacity: 1; }
+        }
 
-        /* Mobile Adjustments */
-        @media (max-width: 768px) { h1 { font-size: 2.2rem; } .hero-visual { width: 220px; height: 220px; } }
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+        }
+
+        /* Description */
+        .description {
+            max-width: 700px;
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            padding: 0 20px;
+        }
+
+        .highlight { color: var(--accent); font-weight: 600; text-decoration: none; }
+
+        /* Labels (Non-clickable as requested) */
+        .filter-labels {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .label {
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: var(--sh-inset); /* Вдавленный эффект */
+            color: var(--text);
+            opacity: 0.6;
+        }
+
+        .label.active {
+            color: var(--accent);
+            opacity: 1;
+        }
+
+        /* Grid of Conditions */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto 80px;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--bg);
+            padding: 35px;
+            border-radius: 35px;
+            box-shadow: var(--sh-l), var(--sh-d);
+            text-align: left;
+        }
+
+        .card h3 { margin-bottom: 10px; font-size: 1.4rem; }
+        .card p { font-size: 0.95rem; opacity: 0.7; }
+        
+        .risk-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            box-shadow: var(--sh-inset);
+            color: #FF3B30;
+        }
+
+        footer {
+            padding: 40px;
+            text-align: center;
+            opacity: 0.4;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .logo-container { width: 160px; height: 160px; }
+        }
     </style>
 </head>
 <body>
 
-    <header class="app-header">
-        <div class="nav-inner">
-            <a href="index.html" class="back-btn">← Home</a>
+    <nav>
+        <a href="index.html" class="home-btn">← Home</a>
+    </nav>
+
+    <main class="hero">
+        <div class="logo-container">
+            <div class="mole"></div>
+            <div class="scan-line"></div>
         </div>
-    </header>
 
-    <main class="content-wrap">
-        
-        <header class="hero">
-            <div class="hero-visual">
-                <div class="mole-shape"></div>
-                <div class="scan-bar"></div>
+        <h1>AI Mole Scanner</h1>
+
+        <p class="description">
+            Your personal skin check assistant is here. We empower you with clinical-grade technology for early detection. AI analyzes 50+ conditions. Use ABCDE rule and get instant results. Perform regular home <a href="#" class="highlight">skin checks</a>, track melanoma risks, and monitor skin conditions with advanced <a href="#" class="highlight">dermatology AI</a>.
+        </p>
+
+        <div class="filter-labels">
+            <span class="label active">All Conditions</span>
+            <span class="label">Malignant</span>
+            <span class="label">Pre-cancerous</span>
+            <span class="label">Benign</span>
+            <span class="label">Inflammatory</span>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <span class="risk-tag">MALIGNANT</span>
+                <h3>Melanoma</h3>
+                <p>Advanced AI screening for asymmetrical patterns and irregular borders in skin lesions.</p>
             </div>
-            <h1>AI Mole Scanner</h1>
-        </header>
-
-        <section class="app-description content-wrap">
-            <p>
-                Your personal skin check assistant is here. We empower you with clinical-grade technology for early detection. AI analyzes 50+ conditions. Use ABCDE rule and get instant results.
-                Perform regular home <span class="highlight">skin checks</span>, track melanoma risks, and monitor skin conditions with advanced <span class="highlight">dermatology AI</span>. Knowledge and early detection save lives.
-            </p>
-            <nav class="categories-nav">
-                <span class="category-label active" style="color: var(--accent-color);">All Conditions</span>
-                <span class="category-label">Malignant</span>
-                <span class="category-label">Pre-cancerous</span>
-                <span class="category-label">Benign</span>
-                <span class="category-label">Inflammatory</span>
-            </nav>
-        </section>
-
-        <section class="tech-box conditions-library" id="conditions">
-            <div class="grid">
-                <article class="neo-card">
-                    <span class="condition-label malignant">MALIGNANT</span>
-                    <h2>Melanoma</h2>
-                    <p>The most dangerous form of skin cancer. Look for ABCDE signs: Asymmetry, Border, Color, Diameter, Evolution.</p>
-                </article>
-                <article class="neo-card">
-                    <span class="condition-label malignant">MALIGNANT</span>
-                    <h2>Basal Cell Carcinoma</h2>
-                    <p>Commonly found on sun-exposed areas. Appears as a pearly bump or a sore that doesn't heal.</p>
-                </article>
-                <article class="neo-card">
-                    <span class="condition-label malignant">MALIGNANT</span>
-                    <h2>Squamous Cell Carcinoma</h2>
-                    <p>Second most common skin cancer. Persistent, scaly red patches that may bleed.</p>
-                </article>
+            <div class="card">
+                <span class="risk-tag">MALIGNANT</span>
+                <h3>Basal Cell Carcinoma</h3>
+                <p>Detection of pearly bumps and non-healing sores using computer vision models.</p>
             </div>
-        </section>
-
-        <section class="tech-stack-showcase" style="background: rgba(255,255,255,0.03); padding: 80px 0;">
-            <div class="container content-wrap" style="text-align: center;">
-                <h2>Our Technology Stack</h2>
-                <div class="grid" style="margin-top: 60px;">
-                    <div class="neo-card">
-                        <div class="faq-graphics"><div class="faq-pulse">🧬</div></div>
-                        <h3>[AI Algorithms Check]</h3>
-                        <p>Advanced Computer Vision API for precise <span class="highlight">lesion analysis</span>.</p>
-                    </div>
-                    <div class="neo-card">
-                        <div class="faq-graphics"><div class="faq-pulse">🧠</div></div>
-                        <h3>[Deep Learning Info]</h3>
-                        <p>Proprietary Neural Networks trained on 100,000+ clinical cases.</p>
-                    </div>
-                </div>
+            <div class="card">
+                <span class="risk-tag">MALIGNANT</span>
+                <h3>Squamous Cell Carcinoma</h3>
+                <p>Monitoring persistent scaly red patches for early stage intervention.</p>
             </div>
-        </section>
-
-        <section class="faq" style="padding: 100px 0 60px;">
-            <div class="content-wrap" style="text-align: center;">
-                <h2>Common Questions</h2>
-                <div class="grid" style="margin-top: 60px;">
-                    <div class="neo-card faq-item">
-                        <h4>Can an app really detect skin cancer?</h4>
-                        <p>While the AI Mole Scanner uses advanced algorithms to identify suspicious patterns, it is a screening tool, not a diagnostic device. Always confirm results with a dermatologist.</p>
-                    </div>
-                    <div class="neo-card faq-item">
-                        <h4>How accurate is the AI Mole Detector?</h4>
-                        <p>Our neural networks are trained on over 100,000 clinical cases, providing high sensitivity to common skin cancer indicators like asymmetry and border irregularity.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="cta" style="padding: 100px 0;">
-            <div class="content-wrap" style="text-align: center;">
-                <div class="cta-graphics"><div class="app-icon-pulse" style="font-size: 3rem;">📱</div></div>
-                <h2>Ready to track your health?</h2>
-                <p style="margin: 20px 0 40px; opacity: 0.7;">Protect your skin. Download on App Store.</p>
-                <a href="https://apple.com/app-store" class="download-btn">Download on App Store</a>
-                <p style="margin-top: 40px; font-size: 0.8rem; opacity: 0.5;">[Stores Icons]</p>
-            </div>
-        </section>
+        </div>
     </main>
 
-    <footer class="app-footer">
-        <p><strong>Medical Disclaimer:</strong> AI Mole Scanner is a tracking tool for informational purposes only. It does not provide a medical diagnosis. Always consult a certified dermatologist for professional <span class="highlight">skin cancer evaluation</span>.</p>
-        <p style="margin-top: 20px;">&copy; 2026 Eoria Apps - Innovation in MedTech & Dermatology AI</p>
+    <footer>
+        &copy; 2026 Eoria Apps | Digital Health Research
     </footer>
 
 </body>
