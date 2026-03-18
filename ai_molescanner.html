@@ -3,187 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Mole Scanner | Skin Cancer & Condition Library | Eoria Apps</title>
-    <meta name="description" content="Identify skin conditions with AI. From Melanoma and Basal Cell Carcinoma to benign moles. Learn symptoms and track your skin health with Eoria Apps.">
+    <title>AI Mole Scanner | Skin Condition & Cancer Library | Eoria Apps</title>
+    <meta name="description" content="Explore 50+ skin conditions analyzed by our AI. From Melanoma and BCC to Psoriasis and benign nevi. Professional dermatology AI guide.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --bg: #e0e5ec;
             --text: #44475a;
             --accent: #007AFF;
             --danger: #FF3B30;
-            --sh-l: -9px -9px 16px #ffffff;
-            --sh-d: 9px 9px 16px rgba(163, 177, 198, 0.6);
-            --sh-inset: inset 6px 6px 12px rgba(163, 177, 198, 0.5), inset -6px -6px 12px #ffffff;
+            --warning: #FF9500;
+            --safe: #34C759;
+            --sh-l: -8px -8px 16px #ffffff;
+            --sh-d: 8px 8px 16px rgba(163, 177, 198, 0.6);
+            --sh-inset: inset 4px 4px 8px rgba(163, 177, 198, 0.5), inset -4px -4px 8px #ffffff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-        body { background: var(--bg); font-family: 'Inter', sans-serif; color: var(--text); line-height: 1.6; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; color: var(--text); line-height: 1.5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        header { padding: 80px 0 40px; text-align: center; }
+        h1 { font-size: 3rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 15px; }
+        .intro { font-size: 1.2rem; opacity: 0.7; max-width: 800px; margin: 0 auto 50px; }
 
-        /* Header */
-        header { padding: 60px 0; text-align: center; }
-        .hero-graphic {
-            width: 180px; height: 180px; margin: 0 auto 30px;
-            background: var(--bg); border-radius: 40px;
-            box-shadow: var(--sh-l), var(--sh-d);
-            display: flex; align-items: center; justify-content: center; font-size: 3rem;
+        /* CATEGORY SELECTOR */
+        .categories-nav {
+            display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 60px;
         }
+        .cat-btn {
+            padding: 12px 24px; border-radius: 50px; background: var(--bg);
+            box-shadow: var(--sh-l), var(--sh-d); border: none; cursor: pointer;
+            font-weight: 600; font-size: 0.9rem; color: var(--text); transition: 0.2s;
+        }
+        .cat-btn:hover { color: var(--accent); }
+        .cat-btn.active { box-shadow: var(--sh-inset); color: var(--accent); }
 
-        h1 { font-size: 3rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 10px; }
-        .subtitle { font-size: 1.2rem; opacity: 0.7; margin-bottom: 40px; }
-
-        /* NEW: Conditions Section */
-        .conditions-section { padding: 60px 0; }
-        .section-title { text-align: center; margin-bottom: 50px; font-size: 2rem; }
-
+        /* GRID SYSTEM */
         .conditions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px; margin-bottom: 100px;
         }
 
-        .condition-card {
-            padding: 35px; border-radius: 40px;
-            box-shadow: var(--sh-l), var(--sh-d);
-            background: var(--bg);
-            transition: 0.3s ease;
+        .card {
+            background: var(--bg); padding: 30px; border-radius: 35px;
+            box-shadow: var(--sh-l), var(--sh-d); transition: 0.3s;
+            display: flex; flex-direction: column;
+        }
+        .card:hover { transform: translateY(-5px); }
+
+        .type-label {
+            font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+            padding: 4px 12px; border-radius: 10px; box-shadow: var(--sh-inset);
+            display: inline-block; width: fit-content; margin-bottom: 15px;
+        }
+        .card.malignant .type-label { color: var(--danger); }
+        .card.precancerous .type-label { color: var(--warning); }
+        .card.benign .type-label { color: var(--safe); }
+
+        .card h3 { font-size: 1.2rem; margin-bottom: 10px; color: #222; }
+        .card p { font-size: 0.9rem; opacity: 0.8; margin-bottom: 15px; flex-grow: 1; }
+        
+        .card .btn-more {
+            font-size: 0.8rem; font-weight: 700; color: var(--accent);
+            text-decoration: none; display: flex; align-items: center;
         }
 
-        .condition-card:hover { transform: translateY(-5px); }
+        footer { text-align: center; padding: 60px; opacity: 0.4; font-size: 0.85rem; border-top: 1px solid rgba(0,0,0,0.05); }
 
-        .risk-badge {
-            display: inline-block; padding: 5px 15px; border-radius: 20px;
-            font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
-            box-shadow: var(--sh-inset); margin-bottom: 20px;
-        }
-        .high-risk { color: var(--danger); }
-        .low-risk { color: #34C759; }
-
-        .condition-card h3 { font-size: 1.5rem; margin-bottom: 15px; }
-        .condition-card p { font-size: 0.95rem; opacity: 0.8; margin-bottom: 20px; }
-
-        .symptoms-list {
-            list-style: none; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.05);
-        }
-        .symptoms-list li {
-            font-size: 0.85rem; margin-bottom: 8px; display: flex; align-items: center;
-        }
-        .symptoms-list li::before { content: "•"; color: var(--accent); font-weight: bold; width: 15px; }
-
-        /* FAQ Section for SEO */
-        .faq-section { padding: 80px 0; }
-        .faq-item {
-            margin-bottom: 20px; padding: 25px; border-radius: 25px;
-            box-shadow: var(--sh-inset);
-        }
-        .faq-item h4 { margin-bottom: 10px; color: var(--accent); }
-
-        /* CTA */
-        .cta-area { text-align: center; padding: 100px 0; }
-        .btn {
-            display: inline-block; padding: 22px 55px; border-radius: 50px;
-            background: var(--bg); box-shadow: var(--sh-l), var(--sh-d);
-            color: var(--accent); text-decoration: none; font-weight: 800; font-size: 1.2rem;
-        }
-        .btn:active { box-shadow: var(--sh-inset); transform: scale(0.97); }
-
-        footer { text-align: center; padding: 50px; opacity: 0.4; font-size: 0.8rem; }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2.2rem; }
-            .conditions-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 768px) { h1 { font-size: 2.2rem; } }
     </style>
 </head>
 <body>
 
     <div class="container">
         <header>
-            <div class="hero-graphic">🔍</div>
-            <h1>AI Mole Scanner</h1>
-            <p class="subtitle">Home screening for skin cancer and common conditions</p>
+            <h1>AI Skin Condition Library</h1>
+            <p class="intro">Detailed guide to 50+ skin conditions analyzed by our advanced AI technology. Knowledge and early detection save lives.</p>
+            
+            <nav class="categories-nav">
+                <button class="cat-btn active">All Conditions</button>
+                <button class="cat-btn">Malignant</button>
+                <button class="cat-btn">Pre-cancerous</button>
+                <button class="cat-btn">Benign</button>
+                <button class="cat-btn">Inflammatory</button>
+            </nav>
         </header>
 
-        <section style="text-align: center; max-width: 800px; margin: 0 auto 80px;">
-            <p>Our AI technology is trained to recognize a wide variety of skin lesions. Early detection is the key to successful treatment. Explore our library of conditions below to understand what our AI looks for.</p>
-        </section>
+        <main class="conditions-grid">
+            
+            <article class="card malignant">
+                <span class="type-label">Malignant</span>
+                <h3>Melanoma</h3>
+                <p>The most dangerous form of skin cancer. Look for ABCDE signs: Asymmetry, Border, Color, Diameter, Evolution.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
 
-        <section class="conditions-section" id="conditions">
-            <h2 class="section-title">Skin Conditions We Analyze</h2>
-            <div class="conditions-grid">
-                
-                <div class="condition-card">
-                    <span class="risk-badge high-risk">High Risk</span>
-                    <h3>Melanoma</h3>
-                    <p>The most serious type of skin cancer. It often starts as a new mole or a change in an existing one.</p>
-                    <ul class="symptoms-list">
-                        <li>Asymmetrical shape</li>
-                        <li>Irregular, blurred borders</li>
-                        <li>Multiple colors or shades</li>
-                        <li>Diameter larger than 6mm</li>
-                    </ul>
-                </div>
+            <article class="card malignant">
+                <span class="type-label">Malignant</span>
+                <h3>Basal Cell Carcinoma</h3>
+                <p>Commonly found on sun-exposed areas. Appears as a pearly bump or a sore that doesn't heal.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
 
-                <div class="condition-card">
-                    <span class="risk-badge high-risk">High Risk</span>
-                    <h3>Basal Cell Carcinoma</h3>
-                    <p>The most common form of skin cancer. Usually appears as a shiny bump or a sore that doesn't heal.</p>
-                    <ul class="symptoms-list">
-                        <li>Pearly or waxy bump</li>
-                        <li>Flat, flesh-colored scar-like lesion</li>
-                        <li>Bleeding or scabbing sore</li>
-                    </ul>
-                </div>
+            <article class="card malignant">
+                <span class="type-label">Malignant</span>
+                <h3>Squamous Cell Carcinoma</h3>
+                <p>Second most common skin cancer. Persistent, scaly red patches that may bleed.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
 
-                <div class="condition-card">
-                    <span class="risk-badge high-risk">High Risk</span>
-                    <h3>Squamous Cell Carcinoma</h3>
-                    <p>Develops in the squamous cells that make up the middle and outer layers of the skin.</p>
-                    <ul class="symptoms-list">
-                        <li>Firm, red nodule</li>
-                        <li>Flat lesion with a scaly, crusted surface</li>
-                        <li>New sore or raised area on an old scar</li>
-                    </ul>
-                </div>
+            <article class="card malignant">
+                <span class="type-label">Malignant</span>
+                <h3>Merkel Cell Carcinoma</h3>
+                <p>A rare but aggressive type of skin cancer. Usually appears as a firm, painless nodule.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
 
-                <div class="condition-card">
-                    <span class="risk-badge low-risk">Low Risk</span>
-                    <h3>Benign Moles (Nevi)</h3>
-                    <p>Common skin growths that are usually harmless but should be monitored for changes over time.</p>
-                    <ul class="symptoms-list">
-                        <li>Uniform brown or tan color</li>
-                        <li>Distinct, round edges</li>
-                        <li>Stable size and shape</li>
-                    </ul>
-                </div>
+            <article class="card precancerous">
+                <span class="type-label">Pre-cancerous</span>
+                <h3>Actinic Keratosis</h3>
+                <p>Rough, scaly patches caused by years of sun exposure. Can lead to squamous cell carcinoma.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
 
-            </div>
-        </section>
+            <article class="card precancerous">
+                <span class="type-label">Pre-cancerous</span>
+                <h3>Bowen's Disease</h3>
+                <p>An early form of skin cancer that is easily treated. Looks like a slow-growing red patch.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
 
-        <section class="faq-section">
-            <h2 class="section-title">Common Questions</h2>
-            <div class="faq-item">
-                <h4>Can an app really detect skin cancer?</h4>
-                <p>While the AI Mole Scanner uses advanced algorithms to identify suspicious patterns, it is a screening tool, not a diagnostic device. Always confirm results with a dermatologist.</p>
-            </div>
-            <div class="faq-item">
-                <h4>How accurate is the AI Mole Detector?</h4>
-                <p>Our neural networks are trained on over 100,000 clinical cases, providing high sensitivity to common skin cancer indicators like asymmetry and border irregularity.</p>
-            </div>
-        </section>
+            <article class="card precancerous">
+                <span class="type-label">Pre-cancerous</span>
+                <h3>Dysplastic Nevus</h3>
+                <p>Atypical moles that may resemble melanoma. People with many have a higher risk of skin cancer.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
 
-        <div class="cta-area">
-            <a href="https://apple.com/app-store" class="btn">Get Started on App Store</a>
-            <p style="font-size: 0.7rem; margin-top: 30px; opacity: 0.5;">*Disclaimer: This is a screening tool only. Not a medical diagnosis.</p>
-        </div>
+            <article class="card benign">
+                <span class="type-label">Benign</span>
+                <h3>Seborrheic Keratosis</h3>
+                <p>Waxy, "stuck-on" growths. Harmless but often mistaken for melanoma by untrained eyes.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
 
+            <article class="card benign">
+                <span class="type-label">Benign</span>
+                <h3>Common Nevus</h3>
+                <p>A standard mole. Usually a small, uniform brown spot with clear borders.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
+
+            <article class="card benign">
+                <span class="type-label">Benign</span>
+                <h3>Cherry Angioma</h3>
+                <p>Small, bright red bumps consisting of blood vessels. Entirely harmless.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
+
+            <article class="card benign">
+                <span class="type-label">Benign</span>
+                <h3>Dermatofibroma</h3>
+                <p>Firm, small bumps that feel like a hard pea under the skin. Common on legs.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
+
+            <article class="card">
+                <span class="type-label">Common</span>
+                <h3>Psoriasis</h3>
+                <p>Autoimmune condition causing silvery scales and itchy, dry red patches.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
+
+            <article class="card">
+                <span class="type-label">Common</span>
+                <h3>Atopic Dermatitis</h3>
+                <p>Commonly known as Eczema. Chronic condition that makes skin red and itchy.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
+
+            <article class="card">
+                <span class="type-label">Common</span>
+                <h3>Rosacea</h3>
+                <p>Causes redness and visible blood vessels in your face. May produce small, red, pus-filled bumps.</p>
+                <a href="#" class="btn-more">Learn more →</a>
+            </article>
+
+            </main>
     </div>
 
     <footer>
-        &copy; 2026 Eoria Apps | Digital Health & AI Research
+        &copy; 2026 Eoria Apps | Data powered by Dermatology AI research. All rights reserved.
     </footer>
 
 </body>
