@@ -3,33 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DermAI - Interactive Flow</title>
+    <title>DermAI - Interactive Mole Scan Result</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
         :root {
-            --bg: #e0e5ec;
+            --bg: #1a1a1a; /* Основной фон (для всего тела) */
             --text-main: #2d3436;
             --text-muted: #8E8E93;
             
             --blue: #007AFF;
             --green: #34C759;
             --orange: #FF9500;
-            --red: #FF3B30;
-
-            --shadow-light: rgba(255, 255, 255, 0.9);
-            --shadow-dark: rgba(163, 177, 198, 0.6);
-            
-            --neu-outset: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
-            --neu-outset-sm: 4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
-            --neu-inset: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
-            
-            --neu-blue-outset: 6px 6px 14px rgba(0, 122, 255, 0.3), -6px -6px 14px rgba(100, 180, 255, 0.5);
-            --neu-blue-active: inset 4px 4px 8px rgba(0, 100, 210, 0.4), inset -4px -4px 8px rgba(100, 180, 255, 0.5);
         }
 
         body {
-            background-color: #1a1a1a;
+            background-color: var(--bg);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
             -webkit-font-smoothing: antialiased;
@@ -37,431 +26,475 @@
 
         .iphone-frame {
             width: 375px; height: 812px;
-            background-color: var(--bg);
             border-radius: 44px; border: 8px solid #333;
             position: relative; overflow: hidden;
-            display: flex; flex-direction: column; color: var(--text-main);
+            display: flex; flex-direction: column; color: #fff;
             box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            background-color: #000;
         }
 
-        .status-bar { padding: 16px 24px 4px; display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; z-index: 10; }
-
-        .header { padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;}
-        .header-title h1 { font-size: 26px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
-        .header-title p { font-size: 13px; color: var(--text-muted); font-weight: 500; margin: 2px 0 0; }
-        .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--bg); box-shadow: var(--neu-outset-sm); padding: 3px; }
-        .avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: #d1d8e0; overflow: hidden; box-shadow: var(--neu-inset); display: flex; justify-content: center; align-items: flex-end; }
-
-        .content { 
-            padding: 10px 24px 100px; flex-grow: 1; overflow-y: auto; 
-            scrollbar-width: none; /* Скрыть скроллбар */
-            -ms-overflow-style: none; /* Для IE/Edge */
-            scroll-behavior: smooth; /* Плавность для JS скролла */
+        /* --- СИСТЕМА КАМЕРЫ --- */
+        
+        /* 1. Фоновое видео (Размытое) */
+        .video-bg {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: blur(25px);
+            transform: scale(1.15); /* Увеличиваем, чтобы скрыть белые края от размытия */
+            z-index: 1;
         }
-        .content::-webkit-scrollbar { display: none; } /* Скрыть скроллбар для WebKit */
 
-        .neu-card { background: var(--bg); border-radius: 24px; padding: 20px; box-shadow: var(--neu-outset); display: flex; flex-direction: column; margin-bottom: 24px; }
-        
-        /* УФ Виджет */
-        .uv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; min-height: 45px; }
-        .uv-location { display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--text-muted); transition: 0.3s;}
-        .uv-weather { font-size: 12px; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 6px; opacity: 0; transition: 0.3s;}
-        .uv-right-info { text-align: right; }
-        .uv-value-container { display: flex; align-items: baseline; gap: 6px; justify-content: flex-end; }
-        .uv-value { font-size: 42px; font-weight: 700; line-height: 1; color: var(--text-muted); transition: 0.3s;}
-        .uv-status { font-size: 14px; font-weight: 600; color: var(--text-muted); }
-        
-        .uv-scale-track { height: 8px; border-radius: 4px; background: var(--bg); box-shadow: var(--neu-inset); display: flex; overflow: hidden; margin-bottom: 8px; }
-        .uv-scale-fill { width: 0%; background: linear-gradient(to right, var(--green), var(--orange)); border-radius: 4px; transition: width 1s ease-out; }
-        .uv-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-weight: 600; margin-bottom: 16px; }
-        
-        /* Кнопка запроса геопозиции внутри УФ */
-        .geo-btn { background: var(--bg); box-shadow: var(--neu-outset-sm); color: var(--blue); border: none; padding: 8px 12px; border-radius: 10px; font-weight: 600; font-size: 11px; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; font-family: inherit;}
-        .geo-btn:active { box-shadow: var(--neu-inset); }
-
-        .spf-banner { background: var(--bg); box-shadow: var(--neu-inset); border-radius: 16px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; opacity: 0.4; transition: 0.3s;}
-        .spf-icon-box { width: 32px; height: 32px; border-radius: 8px; background: var(--bg); box-shadow: var(--neu-outset-sm); display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: 0.3s;}
-
-        /* Карта тела (Профиль) */
-        .card-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--text-main); }
-        .body-profile-card { display: flex; flex-direction: row; justify-content: space-between; align-items: stretch; gap: 16px; }
-        .body-info-col { flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-start; }
-        
-        .skin-type-tag { 
-            display: inline-flex; align-items: center; gap: 8px; background: var(--bg); 
-            box-shadow: var(--neu-outset-sm); padding: 10px 14px; border-radius: 12px; 
-            font-size: 12px; font-weight: 600; color: var(--blue); margin-bottom: 16px; 
-            align-self: flex-start; cursor: pointer; transition: all 0.2s ease; user-select: none;
+        /* 2. Затемняющий тинт поверх размытого фона */
+        .tint-overlay {
+            position: absolute; inset: 0;
+            background: rgba(30, 20, 15, 0.45); /* Теплый темный оттенок как на скрине */
+            z-index: 2;
         }
-        .skin-type-tag:active { box-shadow: var(--neu-inset); transform: scale(0.97); }
-        .skin-type-tag.filled { color: var(--text-muted); box-shadow: var(--neu-outset-sm); background: #e6ebf1; cursor: default; }
-        .skin-type-tag.filled:active { transform: none; }
-        .skin-type-tag.filled span { color: var(--text-main); font-weight: 700; }
-        
-        .progress-stat { margin-bottom: 12px; }
-        .progress-stat .val { font-size: 32px; font-weight: 700; color: var(--text-muted); line-height: 1; opacity: 0.4; transition: 0.3s;}
-        .progress-stat .total { font-size: 16px; color: var(--text-muted); font-weight: 600; opacity: 0.4; transition: 0.3s;}
-        .progress-label { font-size: 13px; color: var(--text-main); font-weight: 600; margin-top: 6px; }
-        
-        .ai-status-link { font-size: 12px; font-weight: 600; color: var(--blue); margin-top: auto; padding-top: 10px; display: flex; align-items: center; gap: 6px; cursor: pointer;}
-        .ai-status-link .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); display: none;}
 
-        /* Силуэт тела */
-        .body-visual-col { width: 100px; border-radius: 20px; background: var(--bg); box-shadow: var(--neu-inset); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; flex-shrink: 0; }
-        .silhouette { width: 45px; fill: #b8bdc4; opacity: 0.3; transition: 0.5s; }
-        
-        @keyframes pulse-empty {
-            0% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.4); }
-            70% { box-shadow: 0 0 0 12px rgba(0, 122, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0); }
+        /* 3. Контейнер Видоискателя */
+        .viewfinder-container {
+            position: absolute;
+            top: 150px; left: 24px; right: 24px; height: 380px;
+            border-radius: 40px;
+            z-index: 5;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            /* Скрываем всё, что выходит за рамки */
+            overflow: hidden; 
         }
-        .start-pulse-marker { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); animation: pulse-empty 2s infinite; top: 35%; left: 50%; transform: translate(-50%, -50%); transition: 0.3s;}
-        
-        .real-marker { position: absolute; width: 8px; height: 8px; border-radius: 50%; opacity: 0; transition: opacity 0.5s ease; }
-        .rm-orange { background: var(--orange); top: 31%; left: 63%; box-shadow: 0 0 6px var(--orange); }
-        .rm-green1 { background: var(--green); top: 48%; left: 30%; box-shadow: 0 0 6px var(--green); }
-        .rm-green2 { background: var(--green); top: 62%; left: 68%; box-shadow: 0 0 6px var(--green); }
 
-        /* --- БЛОК ГИПЕРПЕРСОНАЛИЗАЦИИ (Скрыт по умолчанию) --- */
-        .hyper-personalization-block {
-            max-height: 0; opacity: 0; overflow: hidden; padding: 0 20px; 
-            margin: 0 -20px; /* Чтобы компенсировать паддинг контента */
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        /* 4. Четкое видео внутри видоискателя */
+        .video-fg {
+            position: absolute;
+            /* Смещаем видео назад, чтобы оно идеально совпало с фоновым */
+            top: -150px; left: -24px;
+            width: 375px; height: 812px;
+            object-fit: cover;
+            z-index: 1;
         }
-        .hyper-personalization-block.visible {
-            max-height: 300px; opacity: 1; margin-bottom: 24px; padding: 20px;
+
+        /* Уголки рамки (Брекеты) */
+        .corners-wrapper {
+            position: absolute; inset: 0; z-index: 6; pointer-events: none;
+        }
+        .corner { position: absolute; width: 35px; height: 35px; border-color: rgba(255,255,255,0.9); border-style: solid; border-width: 0; border-radius: 12px; }
+        .c-tl { top: -2px; left: -2px; border-top-width: 2px; border-left-width: 2px; }
+        .c-tr { top: -2px; right: -2px; border-top-width: 2px; border-right-width: 2px; }
+        .c-bl { bottom: -2px; left: -2px; border-bottom-width: 2px; border-left-width: 2px; }
+        .c-br { bottom: -2px; right: -2px; border-bottom-width: 2px; border-right-width: 2px; }
+
+        /* --- ПОЛЬЗОВАТЕЛЬСКИЙ ИНТЕРФЕЙС КАМЕРЫ --- */
+
+        .status-bar { 
+            position: absolute; top: 0; left: 0; right: 0;
+            padding: 16px 24px 4px; display: flex; justify-content: space-between; 
+            font-size: 14px; font-weight: 600; z-index: 10;
+        }
+
+        .top-controls {
+            position: absolute; top: 65px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 10;
         }
         
-        .hyper-content { display: flex; align-items: center; gap: 16px; }
-        .timer-ring { position: relative; width: 75px; height: 75px; border-radius: 50%; box-shadow: var(--neu-inset); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .timer-center { width: 55px; height: 55px; border-radius: 50%; background: var(--bg); box-shadow: var(--neu-outset-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
-        .timer-center .time { font-size: 22px; font-weight: 700; color: var(--blue); line-height: 1; }
-        .timer-center .unit { font-size: 9px; font-weight: 600; color: var(--text-muted); margin-top: 2px;}
-        .hyper-info { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
-        .hyper-info-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
-        .hyper-info-desc { font-size: 11px; color: var(--text-muted); font-weight: 500; margin-bottom: 10px; line-height: 1.3; }
-        
-        .gear-row { display: flex; gap: 10px; }
-        .gear-btn { width: 34px; height: 34px; border-radius: 10px; background: var(--bg); box-shadow: var(--neu-outset-sm); display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: 0.2s; }
-        .gear-btn.active { box-shadow: var(--neu-inset); color: var(--blue); }
+        .circle-btn {
+            width: 44px; height: 44px; border-radius: 50%; border: none;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            display: flex; align-items: center; justify-content: center;
+            color: white; cursor: pointer; transition: 0.2s;
+        }
+        .circle-btn:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.95); }
 
-        /* Главная кнопка */
-        .main-btn-wrapper { margin-bottom: 24px; text-align: center; }
-        .main-btn { 
-            width: 100%; background: var(--blue); color: white; border: none; 
+        .scan-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            padding: 8px 16px; border-radius: 20px;
+            font-size: 13px; font-weight: 500;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        /* Элементы управления камерой внизу */
+        .camera-actions {
+            position: absolute; bottom: 120px; left: 0; right: 0;
+            display: flex; justify-content: space-evenly; align-items: center;
+            z-index: 10;
+        }
+
+        .action-icon { background: transparent; border: none; color: white; cursor: pointer; transition: 0.2s; padding: 10px;}
+        .action-icon:active { opacity: 0.6; transform: scale(0.9); }
+
+        /* Кнопка затвора (Шаттер) */
+        .shutter-wrapper {
+            position: relative; display: flex; align-items: center; justify-content: center;
+        }
+        .shutter-btn {
+            width: 76px; height: 76px; border-radius: 50%;
+            background: #fff; cursor: pointer;
+            /* Черная обводка с белым свечением снаружи */
+            border: 5px solid #1c1c1c;
+            box-shadow: 0 0 0 3px #fff, 0 5px 15px rgba(0,0,0,0.4);
+            transition: transform 0.1s, background 0.1s;
+        }
+        .shutter-btn:active { transform: scale(0.9); background: #e0e0e0; }
+
+        /* Плавающий нижний Tab Bar (Glassmorphism) */
+        .floating-tab-bar { 
+            position: absolute; bottom: 20px; left: 20px; right: 20px; height: 65px; 
+            background: rgba(60, 60, 65, 0.6); /* Темное матовое стекло */
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            display: flex; justify-content: space-around; align-items: center; 
+            border-radius: 35px; z-index: 20; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .tab-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.6); cursor: pointer; transition: 0.2s;}
+        .tab-item.active { color: #fff; }
+        .tab-item:active { opacity: 0.7; }
+        
+        /* Центральная фиолетовая кнопка скана */
+        .scan-tab {
+            width: 48px; height: 48px; border-radius: 50%; 
+            background: #7a5cff; /* Фиолетовый цвет как на скрине */
+            display: flex; align-items: center; justify-content: center;
+            color: white; 
+            box-shadow: 0 4px 15px rgba(122, 92, 255, 0.4);
+        }
+
+        /* Эффект вспышки при сканировании */
+        .flash-overlay {
+            position: absolute; inset: 0; background: white; opacity: 0; z-index: 100; pointer-events: none; transition: opacity 0.1s;
+        }
+        .flash-overlay.active { opacity: 0.8; transition: opacity 0.05s; }
+
+        /* Заглушка, если камера недоступна */
+        .camera-fallback {
+            position: absolute; inset: 0; background: #333; display: none; 
+            align-items: center; justify-content: center; color: white; text-align: center; padding: 20px; z-index: 0; font-size: 14px;
+        }
+
+        /* --- НОВЫЙ БЛОК: ПЛАШКА РЕЗУЛЬТАТОВ (Выезжает снизу) --- */
+        .result-bottom-sheet {
+            position: absolute; bottom: -100%; left: 0; right: 0;
+            height: 85%; /* Не на весь экран, оставить шапку */
+            background: #fff;
+            border-radius: 40px 40px 0 0;
+            z-index: 200;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+            transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-main); /* Переключить цвет текста для плашки */
+            display: flex; flex-direction: column;
+        }
+        .result-bottom-sheet.active { bottom: 0; }
+
+        .sheet-content { padding: 24px; display: flex; flex-direction: column; flex-grow: 1; }
+
+        .sheet-handle {
+            width: 60px; height: 5px; background: #E0E0E0; border-radius: 3px; align-self: center; margin-top: -10px; margin-bottom: 24px; cursor: pointer;
+        }
+
+        .result-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; }
+        .result-header h3 { font-size: 20px; font-weight: 700; margin: 0; }
+        .scan-date { font-size: 11px; color: var(--text-muted); }
+
+        .status-block { display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 20px; margin-bottom: 24px; }
+        .status-block.positive { background: #E9FBF0; } /* Светло-зеленый фон */
+
+        .status-icon {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: #fff; display: flex; align-items: center; justify-content: center;
+            border: 3px solid #E9FBF0;
+        }
+        .status-block.positive .status-icon { color: var(--green); }
+
+        .status-text strong { font-size: 18px; font-weight: 700; }
+        .status-text p { font-size: 13px; color: #555; margin: 4px 0 0; }
+
+        /* Сетка ABCDE */
+        .abcde-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+        .abcde-item { display: flex; align-items: center; gap: 12px; background: #F8F9FA; padding: 12px; border-radius: 16px; }
+
+        .letter { font-size: 24px; font-weight: 800; color: #CCC; opacity: 0.6; width: 20px; text-align: center;}
+        .abcde-icon { color: var(--text-main); opacity: 0.8;}
+        .abcde-details { display: flex; flex-direction: column; gap: 2px;}
+        .metric { font-size: 11px; color: var(--text-muted); }
+        .res { font-size: 13px; font-weight: 600; margin: 0; }
+
+        /* Рекомендации */
+        .recommendations-block { margin-bottom: 24px; border-top: 1px solid #EEE; padding-top: 24px; }
+        .recommendations-block h4 { font-size: 16px; font-weight: 700; margin: 0 0 16px; }
+        .recommendations-block ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;}
+        .recommendations-block li { font-size: 13px; display: flex; align-items: flex-start; gap: 10px; color: #555;}
+        .recommendations-block svg { color: var(--blue); margin-top: 1px;}
+
+        /* Кнопка на плашке */
+        .action-sheet-btn {
+            margin-top: auto;
+            width: 100%; background: #7a5cff; color: white; border: none;
             border-radius: 20px; padding: 20px; font-family: inherit;
-            display: flex; align-items: center; justify-content: center; gap: 14px;
-            box-shadow: var(--neu-blue-outset); cursor: pointer; transition: 0.2s;
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(122, 92, 255, 0.4);
         }
-        .main-btn:active { box-shadow: var(--neu-blue-active); transform: scale(0.98); }
-        .btn-text h3 { margin: 0; font-size: 18px; font-weight: 600; }
-        .btn-text p { margin: 4px 0 0; font-size: 12px; opacity: 0.8; font-weight: 500; }
+        .action-sheet-btn:active { opacity: 0.8; transform: scale(0.98); }
 
-        /* Нижний Tab Bar */
-        .tab-bar { position: absolute; bottom: 0; width: 100%; height: 90px; background: var(--bg); display: flex; justify-content: space-around; align-items: center; padding-bottom: 20px; box-shadow: 0 -10px 20px var(--shadow-dark); border-radius: 0 0 36px 36px; z-index: 20; }
-        .tab-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; color: var(--text-muted); }
-        .tab-item.active { color: var(--blue); }
-        .sf-icon { width: 24px; height: 24px; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-        
-        .center-tab { position: relative; top: -15px; }
-        .center-btn { width: 64px; height: 64px; border-radius: 50%; background: var(--blue); color: white; display: flex; align-items: center; justify-content: center; box-shadow: var(--neu-blue-outset); }
     </style>
 </head>
 <body>
 
 <div class="iphone-frame">
+    <div class="flash-overlay" id="flashOverlay"></div>
+    <div class="camera-fallback" id="cameraFallback">Камера недоступна.<br>Пожалуйста, дайте разрешение в браузере.</div>
+
+    <video class="video-bg" id="videoBg" autoplay playsinline muted></video>
+    <div class="tint-overlay"></div>
+
     <div class="status-bar">
         <span>13:13</span>
         <span style="letter-spacing: 2px;">📶 🔋</span> 
     </div>
 
-    <header class="header">
-        <div class="header-title">
-            <h1>DermAI</h1>
-            <p>Четверг, 19 марта</p>
-        </div>
-        <div class="avatar">
-            <div class="avatar-inner">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#8E8E93" style="margin-bottom: -2px;">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-            </div>
-        </div>
-    </header>
-
-    <div class="content" id="scrollContent">
+    <div class="top-controls">
+        <button class="circle-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2L5.5 13h7l-2 9 9-11h-7l2-9z"></path><line x1="4" y1="4" x2="20" y2="20"></line></svg>
+        </button>
         
-        <div class="neu-card">
-            <div class="uv-header">
-                <div>
-                    <div class="uv-location" id="uvLocationWrap">
-                        <button class="geo-btn" id="geoBtn" onclick="fetchLocationData()">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                            Узнать УФ-индекс
-                        </button>
-                        <span id="locText" style="display: none; color: var(--text-main);">Варшава</span>
-                    </div>
-                    <div class="uv-weather" id="uvWeather">
-                        <span style="font-size: 16px;">🌡️</span> Ясно, 5°C
-                    </div>
-                </div>
-                <div class="uv-right-info">
-                    <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 2px; display: flex; align-items: center; gap: 4px; justify-content: flex-end;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="23" y2="12"></line></svg>
-                        УФ-Индекс
-                    </div>
-                    <div class="uv-value-container">
-                        <div class="uv-value" id="uvValue">--</div>
-                        <div class="uv-status" id="uvStatus">Неизв.</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="uv-scale-track">
-                <div class="uv-scale-fill" id="uvScale"></div>
-            </div>
-            <div class="uv-labels">
-                <span>0-2 Низк</span><span>3-5 Умер</span><span>6-7 Выс</span><span>8+ Экстр</span>
-            </div>
-
-            <div class="spf-banner" id="spfBanner">
-                <div class="spf-icon-box" id="spfIcon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M10 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM12 11v4M10 13h4"></path></svg>
-                </div>
-                <div style="font-size: 11px;">
-                    <strong style="color: var(--text-main); font-size: 13px;">SPF защита</strong><br>
-                    <span style="color: var(--text-muted);" id="uvPeak">Нет данных</span>
-                </div>
-            </div>
+        <div class="scan-badge">
+            <span style="font-size: 14px;">🤚</span> 1 scan left
         </div>
-
-        <div class="neu-card">
-            <div class="card-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                Ваш профиль
-            </div>
-            
-            <div class="body-profile-card">
-                <div class="body-info-col">
-                    <div class="skin-type-tag" id="ptBtn" onclick="determinePhototype()">
-                        <svg id="ptIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                        <span id="ptText">Определить фототип</span>
-                    </div>
-
-                    <div class="progress-stat">
-                        <span class="val" id="progVal">0</span> <span class="total" id="progTotal">/ 90 зон</span>
-                        <div class="progress-label" id="progLabel">Профиль пока пуст</div>
-                    </div>
-
-                    <div class="ai-status-link" id="actionLink">
-                        <div class="dot" id="actionDot"></div>
-                        <span id="actionText">Создать цифрового двойника ›</span>
-                    </div>
-                </div>
-
-                <div class="body-visual-col">
-                    <svg class="silhouette" id="silhouette" viewBox="0 0 100 200">
-                        <circle cx="50" cy="35" r="12" />
-                        <rect x="38" y="50" width="24" height="45" />
-                        <rect x="28" y="50" width="8" height="40" />
-                        <rect x="64" y="50" width="8" height="40" />
-                        <rect x="40" y="98" width="8" height="50" />
-                        <rect x="52" y="98" width="8" height="50" />
-                    </svg>
-                    <div class="start-pulse-marker" id="pulseMarker"></div>
-                    <div class="real-marker rm-orange" id="rm1"></div>
-                    <div class="real-marker rm-green1" id="rm2"></div>
-                    <div class="real-marker rm-green2" id="rm3"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="neu-card hyper-personalization-block" id="hyperBlock">
-            <div class="card-title" style="margin-bottom: 12px; color: var(--blue);">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-                Умный контроль солнца
-            </div>
-            <div class="hyper-content">
-                <div class="timer-ring">
-                    <svg viewBox="0 0 100 100" style="position: absolute; width: 100%; height: 100%; transform: rotate(-90deg); z-index: 1;">
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="var(--blue)" stroke-width="6" stroke-dasharray="251" stroke-dashoffset="251" stroke-linecap="round" id="timerCircle" style="transition: stroke-dashoffset 1.5s ease-out 0.5s;"/>
-                    </svg>
-                    <div class="timer-center">
-                        <span class="time">45</span>
-                        <span class="unit">мин</span>
-                    </div>
-                </div>
-                
-                <div class="hyper-info">
-                    <div class="hyper-info-title">Лимит до ожога</div>
-                    <div class="hyper-info-desc">Для Типа II (Светлая кожа) при текущем УФ рекомендуется взять с собой:</div>
-                    
-                    <div class="gear-row">
-                        <div class="gear-btn active" title="SPF">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M10 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM12 11v4M10 13h4"></path></svg>
-                        </div>
-                        <div class="gear-btn active" title="Тень">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v12M12 14a2 2 0 0 0 2 2"></path><path d="M4 10a8 8 0 0 1 16 0H4z"></path></svg>
-                        </div>
-                        <div class="gear-btn" title="Одежда">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-3L14 3h-4L7 7H4v5h3v9h10v-9h3V7z"></path></svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="main-btn-wrapper">
-            <button class="main-btn">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"></path>
-                    <rect x="9" y="9" width="6" height="6" rx="1"></rect>
-                </svg>
-                <div class="btn-text" style="text-align: left;">
-                    <h3>Начать первое<br>сканирование</h3>
-                    <p>ИИ проанализирует родинку за 30 сек.</p>
-                </div>
-            </button>
-        </div>
-
+        
+        <button class="circle-btn" onclick="window.location.href='/'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
     </div>
 
-    <div class="tab-bar">
+    <div class="viewfinder-container">
+        <video class="video-fg" id="videoFg" autoplay playsinline muted></video>
+        
+        <div class="corners-wrapper">
+            <div class="corner c-tl"></div>
+            <div class="corner c-tr"></div>
+            <div class="corner c-bl"></div>
+            <div class="corner c-br"></div>
+        </div>
+    </div>
+
+    <div class="camera-actions">
+        <button class="action-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline><circle cx="19" cy="19" r="4" fill="white" stroke="white"></circle><line x1="19" y1="17" x2="19" y2="21" stroke="black"></line><line x1="17" y1="19" x2="21" y2="19" stroke="black"></line></svg>
+        </button>
+        
+        <div class="shutter-wrapper" onclick="takePhoto()">
+            <div class="shutter-btn" id="shutterBtn"></div>
+        </div>
+        
+        <button class="action-icon" onclick="flipCamera()">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+        </button>
+    </div>
+
+    <div class="floating-tab-bar">
+        <div class="tab-item" onclick="window.location.href='/'">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"></rect><circle cx="8.5" cy="8.5" r="2.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+            <span>Main</span>
+        </div>
+        <div class="tab-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>
+            <span>History</span>
+        </div>
+        
         <div class="tab-item active">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="4"></rect><circle cx="8.5" cy="8.5" r="2.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
-            <span>Дневник</span>
-        </div>
-        <div class="tab-item">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-            <span>Защита</span>
-        </div>
-        <div class="tab-item center-tab">
-            <div class="center-btn">
-                <svg class="sf-icon" style="width: 28px; height: 28px;" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle></svg>
+            <div class="scan-tab">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg>
             </div>
-            <span style="margin-top: 6px;">Скан</span>
+        </div>
+        
+        <div class="tab-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>
+            <span>Tips</span>
         </div>
         <div class="tab-item">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            <span>История</span>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>Settings</span>
         </div>
-        <div class="tab-item">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            <span>Профиль</span>
+    </div>
+
+    <div class="result-bottom-sheet" id="resultSheet">
+        <div class="sheet-content">
+            <div class="sheet-handle" onclick="resetScanView()"></div>
+            
+            <div class="result-header">
+                <h3>Результаты анализа родинки</h3>
+                <span class="scan-date">19 марта, 13:14</span>
+            </div>
+
+            <div class="status-block positive">
+                <div class="status-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <div class="status-text">
+                    <strong>Все в порядке</strong>
+                    <p>Риск: Низкий</p>
+                </div>
+            </div>
+
+            <div class="abcde-grid">
+                <div class="abcde-item">
+                    <span class="letter">A</span>
+                    <div class="abcde-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line></svg></div>
+                    <div class="abcde-details">
+                        <span class="metric">Асимметрия</span>
+                        <p class="res">Симметричная</p>
+                    </div>
+                </div>
+                <div class="abcde-item">
+                    <span class="letter">B</span>
+                    <div class="abcde-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 12a4 4 0 1 1-8 0a4 4 0 0 1 8 0z"></path></svg></div>
+                    <div class="abcde-details">
+                        <span class="metric">Границы</span>
+                        <p class="res">Ровные, четкие</p>
+                    </div>
+                </div>
+                <div class="abcde-item">
+                    <span class="letter">C</span>
+                    <div class="abcde-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg></div>
+                    <div class="abcde-details">
+                        <span class="metric">Цвет</span>
+                        <p class="res">Однородный (кор.)</p>
+                    </div>
+                </div>
+                <div class="abcde-item">
+                    <span class="letter">D</span>
+                    <div class="abcde-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg></div>
+                    <div class="abcde-details">
+                        <span class="metric">Диаметр</span>
+                        <p class="res">4 мм</p>
+                    </div>
+                </div>
+                 <div class="abcde-item">
+                    <span class="letter">E</span>
+                    <div class="abcde-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+                    <div class="abcde-details">
+                        <span class="metric">Развитие</span>
+                        <p class="res">Без изменений</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendations-block">
+                <h4>Рекомендации ИИ</h4>
+                <ul>
+                    <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Продолжайте ежемесячное самообследование кожных покровов.</li>
+                    <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Запланируйте следующее сканирование этой родинки через 6 месяцев.</li>
+                     <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg> Всегда используйте SPF-защиту 50+ на открытых участках кожи.</li>
+                </ul>
+            </div>
+
+            <button class="action-sheet-btn" onclick="resetScanView()">Готово / Сканировать еще одну</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Переменные состояний (Флоу)
-    let isLocationSet = false;
-    let isPhototypeSet = false;
+    let currentStream = null;
+    let useFrontCamera = false;
 
-    // Функция для плавного скроллинга колесиком мыши (УЛУЧШЕНИЕ)
-    document.getElementById('scrollContent').addEventListener('wheel', function(e) {
-        e.preventDefault(); // Отменить стандартный скролл (который может не работать)
-        const delta = e.deltaY;
-        const content = e.currentTarget;
-        
-        // Коэффициент скорости прокрутки (можно настроить)
-        const scrollAmount = delta * 1.5;
+    async function initCamera() {
+        const videoBg = document.getElementById('videoBg');
+        const videoFg = document.getElementById('videoFg');
+        const fallback = document.getElementById('cameraFallback');
 
-        // Плавная прокрутка с использованием JS (синхронизируется с CSS behavior: smooth)
-        content.scrollBy({
-            top: scrollAmount,
-            behavior: 'smooth'
-        });
-    }, { passive: false });
+        // Останавливаем предыдущий поток, если есть (при смене камеры)
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+        }
 
-    // Проверка: нужно ли показать блок Гиперперсонализации
-    function checkHyperPersonalization() {
-        if (isLocationSet && isPhototypeSet) {
-            const hyperBlock = document.getElementById('hyperBlock');
-            hyperBlock.classList.add('visible');
+        const constraints = {
+            video: { 
+                facingMode: useFrontCamera ? "user" : "environment",
+                width: { ideal: 1080 },
+                height: { ideal: 1920 }
+            }
+        };
+
+        try {
+            currentStream = await navigator.mediaDevices.getUserMedia(constraints);
             
-            // Анимация таймера
-            setTimeout(() => {
-                document.getElementById('timerCircle').style.strokeDashoffset = "60";
-            }, 100);
+            // Направляем один и тот же поток в оба video тега
+            videoBg.srcObject = currentStream;
+            videoFg.srcObject = currentStream;
             
-            // Прокручиваем к блоку (синхронизировано с smooth behavior)
-            setTimeout(() => {
-                document.getElementById('scrollContent').scrollBy({ top: 200, behavior: 'smooth' });
-            }, 500);
+            fallback.style.display = 'none';
+        } catch (err) {
+            console.error("Ошибка доступа к камере: ", err);
+            fallback.style.display = 'flex'; // Показываем сообщение об ошибке
         }
     }
 
-    // ДЕЙСТВИЕ 1: Пользователь ввел данные о локации
-    function fetchLocationData() {
-        const btn = document.getElementById('geoBtn');
-        btn.innerHTML = '⏳ Загрузка...';
+    // Имитация вспышки, "снимка" и анализа
+    function takePhoto() {
+        const shutterBtn = document.getElementById('shutterBtn');
+        const flash = document.getElementById('flashOverlay');
         
+        // Вспышка
+        flash.classList.add('active');
         setTimeout(() => {
-            // Скрываем кнопку, показываем локацию
-            btn.style.display = 'none';
-            document.getElementById('locText').style.display = 'inline';
-            
-            // Обновляем УФ данные (Варшава, УФ 1)
-            document.getElementById('uvWeather').style.opacity = "1";
-            
-            const uvVal = document.getElementById('uvValue');
-            uvVal.innerText = "1";
-            uvVal.style.color = "var(--orange)"; // Цвет как на скриншоте для единицы
-            
-            document.getElementById('uvStatus').innerText = "Низк.";
-            document.getElementById('uvScale').style.width = "10%";
-            
-            // Обновляем баннер SPF
-            const spfBanner = document.getElementById('spfBanner');
-            spfBanner.style.opacity = "1";
-            document.getElementById('spfIcon').style.color = "var(--blue)";
-            document.getElementById('uvPeak').innerText = "Пик УФ сегодня: 3.9";
+            flash.classList.remove('active');
+        }, 100);
 
-            isLocationSet = true;
-            checkHyperPersonalization();
-        }, 600);
+        // Имитация анализа (изменение кнопки на спиннер/часы)
+        shutterBtn.style.background = "transparent";
+        shutterBtn.style.border = "5px solid rgba(255,255,255,0.3)";
+        shutterBtn.innerHTML = `
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+        `;
+        shutterBtn.style.pointerEvents = "none"; // Отключить клик во время анализа
+
+        // Появление плашки через 2 секунды (имитация анализа)
+        setTimeout(() => {
+            showResultSheet();
+        }, 2000);
     }
 
-    // ДЕЙСТВИЕ 2: Пользователь ввел данные о фототипе
-    function determinePhototype() {
-        const btn = document.getElementById('ptBtn');
-        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <span>Анализ...</span>';
-        btn.style.boxShadow = "var(--neu-inset)";
-
-        setTimeout(() => {
-            // 1. Меняем тег фототипа
-            btn.style.boxShadow = "var(--neu-outset-sm)";
-            btn.classList.add('filled');
-            btn.innerHTML = '👱‍♀️ Тип II: <span>Светлая кожа</span>';
-            btn.onclick = null; // Отключаем клик
-            
-            // 2. Обновляем метрики прогресса
-            const progVal = document.getElementById('progVal');
-            progVal.innerText = "5";
-            progVal.style.color = "var(--green)";
-            progVal.style.opacity = "1";
-            
-            document.getElementById('progTotal').style.opacity = "1";
-            document.getElementById('progLabel').innerText = "Отсканировано ИИ";
-            
-            // 3. Обновляем статус ИИ
-            const actionLink = document.getElementById('actionLink');
-            actionLink.style.color = "var(--text-main)";
-            actionLink.style.cursor = "default";
-            document.getElementById('actionDot').style.display = "block";
-            document.getElementById('actionText').innerText = "Стабильно";
-            
-            // 4. Оживляем силуэт
-            document.getElementById('pulseMarker').style.display = "none";
-            document.getElementById('silhouette').style.opacity = "1";
-            document.getElementById('rm1').style.opacity = "1";
-            document.getElementById('rm2').style.opacity = "1";
-            document.getElementById('rm3').style.opacity = "1";
-
-            isPhototypeSet = true;
-            checkHyperPersonalization();
-        }, 800);
+    function showResultSheet() {
+        const sheet = document.getElementById('resultSheet');
+        sheet.classList.add('active');
     }
+
+    function resetScanView() {
+        const sheet = document.getElementById('resultSheet');
+        const shutterBtn = document.getElementById('shutterBtn');
+
+        // Скрыть плашку
+        sheet.classList.remove('active');
+
+        // Сбросить кнопку затвора через время анимации
+        setTimeout(() => {
+            shutterBtn.innerHTML = "";
+            shutterBtn.style.background = "#fff";
+            shutterBtn.style.border = "5px solid #1c1c1c";
+            shutterBtn.style.pointerEvents = "auto";
+        }, 500);
+    }
+
+    // Смена камеры (фронтальная/основная)
+    function flipCamera() {
+        useFrontCamera = !useFrontCamera;
+        
+        // Зеркалим видео, если камера фронтальная
+        const transformValue = useFrontCamera ? 'scaleX(-1)' : 'scaleX(1)';
+        document.getElementById('videoBg').style.transform = `scale(1.15) ${transformValue}`;
+        document.getElementById('videoFg').style.transform = transformValue;
+        
+        initCamera();
+    }
+
+    // Запускаем камеру при загрузке страницы
+    window.onload = initCamera;
 </script>
 
 </body>
