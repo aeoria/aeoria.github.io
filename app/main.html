@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DermAI - iOS Icons Prototype</title>
+    <title>DermAI - Feature Rich Prototype</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,6 +12,7 @@
             --accent-color: #1e88e5;
             --violet-accent: #9f86ff;
             --green-accent: #4CAF50;
+            --warning-color: #FF9800;
             --shadow-outset: 10px 10px 20px rgba(163, 177, 198, 0.4),
                               -10px -10px 20px rgba(255, 255, 255, 0.8);
             --shadow-inset: inset 6px 6px 12px rgba(163, 177, 198, 0.5), 
@@ -44,206 +45,107 @@
             box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 10px 10px 20px rgba(0,0,0,0.1);
         }
 
-        .status-bar {
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        header { padding: 10px 25px; }
+        .status-bar { padding: 15px 30px; display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; }
+        header { padding: 10px 25px 0; }
         h1 { font-size: 28px; margin: 0; }
 
+        /* Скрываем скроллбар для красоты прототипа */
         .content {
             padding: 20px;
             flex-grow: 1;
             overflow-y: auto;
+            scrollbar-width: none; 
         }
+        .content::-webkit-scrollbar { display: none; }
 
         .card {
             background: var(--bg-color);
             border-radius: 30px;
             box-shadow: var(--shadow-outset);
-            padding: 25px;
-            margin-bottom: 30px;
+            padding: 22px;
+            margin-bottom: 25px;
         }
+
+        /* Новый Alert Banner */
+        .alert-banner {
+            background: var(--bg-color);
+            border-radius: 18px;
+            box-shadow: var(--shadow-inset);
+            padding: 12px 18px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-icon { font-size: 20px; }
+        .alert-text { font-size: 12px; font-weight: 600; color: var(--warning-color); line-height: 1.4; }
 
         .uv-section { display: flex; justify-content: flex-end; text-align: center; }
         .uv-meter { width: 110px; }
         .uv-value { font-size: 48px; font-weight: 600; display: block; margin-top: -10px; }
-        .uv-label {
-            font-size: 13px;
-            background: #ffffff;
-            padding: 4px 12px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-outset);
-            display: inline-block;
-        }
+        .uv-label { font-size: 13px; background: #ffffff; padding: 4px 12px; border-radius: 12px; box-shadow: var(--shadow-outset); display: inline-block; }
 
         .scan-btn-container { display: flex; align-items: center; gap: 15px; }
         .scan-main-btn {
             background: var(--accent-color);
             color: white;
             border: none;
-            padding: 18px 25px;
+            padding: 18px 20px;
             border-radius: 20px;
             font-weight: 600;
             flex-grow: 1;
             text-align: left;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
-            box-shadow: 8px 8px 16px rgba(10, 50, 100, 0.3),
-                        -8px -8px 16px rgba(100, 150, 255, 0.5);
+            box-shadow: 8px 8px 16px rgba(10, 50, 100, 0.3), -8px -8px 16px rgba(100, 150, 255, 0.5);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .scan-main-btn:active {
-            box-shadow: inset 4px 4px 8px rgba(10, 50, 100, 0.3),
-                        inset -4px -4px 8px rgba(100, 150, 255, 0.5);
-        }
+        .scan-main-btn:active { box-shadow: inset 4px 4px 8px rgba(10, 50, 100, 0.3), inset -4px -4px 8px rgba(100, 150, 255, 0.5); }
 
         .scan-preview {
-            width: 80px;
-            height: 80px;
-            border-radius: 25px;
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
             background: #e0e5ec;
             box-shadow: var(--shadow-inset);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
         }
-        .mole-spot {
-            width: 45px;
-            height: 40px;
-            background: #4a3728;
-            border-radius: 50% 40% 60% 30%;
-            filter: blur(4px);
+        .mole-spot { width: 35px; height: 30px; background: #4a3728; border-radius: 50% 40% 60% 30%; filter: blur(3px); }
+
+        /* Стили для карточки истории */
+        .history-item { display: flex; align-items: center; gap: 15px; }
+        .history-info { flex-grow: 1; }
+        .history-title { font-weight: 600; font-size: 14px; }
+        .history-date { font-size: 11px; opacity: 0.6; margin-top: 2px; }
+        .status-badge { font-size: 11px; font-weight: 600; color: var(--green-accent); display: flex; align-items: center; gap: 4px; }
+        .status-dot { width: 8px; height: 8px; background-color: var(--green-accent); border-radius: 50%; box-shadow: 0 0 5px var(--green-accent); }
+
+        /* Обучающая карточка */
+        .edu-icon-wrapper {
+            width: 45px; height: 45px; border-radius: 15px;
+            background: var(--bg-color); box-shadow: var(--shadow-outset);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--violet-accent); flex-shrink: 0;
         }
 
         .progress-title { font-weight: 600; margin-bottom: 8px; font-size: 19px; }
-        .progress-subtext { font-size: 14px; opacity: 0.8; margin-bottom: 20px; }
+        .progress-subtext { font-size: 13px; opacity: 0.8; margin-bottom: 20px; }
+        .body-placeholder { width: 60px; height: 80px; background: #eef2f7; border-radius: 15px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-inset); }
 
-        .body-placeholder {
-            width: 70px;
-            height: 90px;
-            background: #eef2f7;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: var(--shadow-inset);
-        }
+        .slider-container { margin: 25px 0 10px 0; }
+        .slider-track { height: 10px; background: #e0e5ec; border-radius: 5px; box-shadow: var(--shadow-inset); position: relative; }
+        .slider-fill { width: 15%; height: 100%; background: #a2d2a2; border-radius: 5px; }
+        .slider-thumb { width: 20px; height: 20px; background: #ffffff; border-radius: 50%; position: absolute; top: -5px; left: 15%; box-shadow: var(--shadow-outset); }
 
-        .slider-container { margin: 25px 0; }
-        .slider-track {
-            height: 12px;
-            background: #e0e5ec;
-            border-radius: 6px;
-            box-shadow: var(--shadow-inset);
-            position: relative;
-        }
-        .slider-fill {
-            width: 15%;
-            height: 100%;
-            background: #a2d2a2;
-            border-radius: 6px;
-        }
-        .slider-thumb {
-            width: 24px;
-            height: 24px;
-            background: #ffffff;
-            border-radius: 50%;
-            position: absolute;
-            top: -6px;
-            left: 15%;
-            box-shadow: var(--shadow-outset);
-            cursor: pointer;
-        }
-
-        .toggle-row {
-            display: flex;
-            background: #e0e5ec;
-            border-radius: 18px;
-            box-shadow: var(--shadow-inset);
-            padding: 4px;
-            margin-top: 20px;
-        }
-        .toggle-item {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            border-radius: 12px;
-            margin: 0 4px;
-        }
-        .toggle-item.active {
-            background: #ffffff;
-            color: var(--green-accent);
-            box-shadow: var(--shadow-outset);
-        }
-
-        /* Настройки Tab Bar и Иконок */
-        .tab-bar {
-            height: 90px;
-            background: var(--bg-color);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding-bottom: 25px;
-            box-shadow: 0 -10px 20px rgba(163, 177, 198, 0.4);
-        }
-
-        .tab-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: #9aa0a6;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
+        /* Tab Bar */
+        .tab-bar { height: 90px; background: var(--bg-color); display: flex; justify-content: space-around; align-items: center; padding-bottom: 20px; box-shadow: 0 -10px 20px rgba(163, 177, 198, 0.4); flex-shrink: 0; z-index: 10; }
+        .tab-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 600; color: #9aa0a6; }
         .tab-item.active { color: var(--accent-color); }
-
-        /* Класс для стилизации SVG под SF Pro */
-        .sf-icon {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 6px;
-            stroke-width: 1.8;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .tab-icon-circle {
-            width: 55px;
-            height: 55px;
-            background: var(--violet-accent);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            margin-top: -35px;
-            box-shadow: var(--tab-shadow);
-        }
-
-        .tab-icon-circle:active {
-            box-shadow: inset 4px 4px 8px rgba(159, 134, 255, 0.4),
-                        inset -4px -4px 8px rgba(255, 255, 255, 0.8);
-        }
-        
-        /* Иконка сканера внутри центральной кнопки */
-        .sf-icon-scanner {
-            width: 26px;
-            height: 26px;
-            stroke-width: 2;
-        }
+        .sf-icon { width: 22px; height: 22px; margin-bottom: 5px; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .tab-icon-circle { width: 55px; height: 55px; background: var(--violet-accent); border-radius: 18px; display: flex; align-items: center; justify-content: center; color: white; margin-top: -30px; box-shadow: var(--tab-shadow); }
     </style>
 </head>
 <body>
@@ -259,10 +161,16 @@
     </header>
 
     <div class="content">
+        
+        <div class="alert-banner">
+            <span class="alert-icon">🧴</span>
+            <span class="alert-text">УФ-Индекс 3 (Умеренный).<br>Рекомендуется нанести SPF 30+.</span>
+        </div>
+
         <div class="card uv-section">
             <div class="uv-meter">
                 <span style="font-size: 11px; font-weight: 600;">УФ-Индекс</span>
-                <div style="height: 12px; background: linear-gradient(to right, #4CAF50, #FFC107, #F44336); border-radius: 6px; margin: 8px 0;"></div>
+                <div style="height: 10px; background: linear-gradient(to right, #4CAF50, #FFC107, #F44336); border-radius: 5px; margin: 8px 0;"></div>
                 <span class="uv-value">3</span>
                 <span class="uv-label">Низкий</span>
             </div>
@@ -272,13 +180,13 @@
             <div class="scan-btn-container">
                 <div style="flex-grow: 1;">
                     <button class="scan-main-btn">
-                        Начать сканирование
-                        <svg class="sf-icon sf-icon-scanner" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="margin:0;">
+                        Начать проверку
+                        <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="margin:0; width: 24px;">
                             <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"></path>
                             <rect x="9" y="9" width="6" height="6" rx="1"></rect>
                         </svg>
                     </button>
-                    <p style="font-size: 12px; margin: 10px 0 0 5px; opacity: 0.6;">Быстрая, 30-ти секундная проверка</p>
+                    <p style="font-size: 11px; margin: 10px 0 0 5px; opacity: 0.6;">Быстрая 30-секундная проверка ИИ</p>
                 </div>
                 <div class="scan-preview">
                     <div class="mole-spot"></div>
@@ -287,77 +195,84 @@
         </div>
 
         <div class="card">
-            <div style="display: flex; justify-content: space-between;">
+            <h3 style="font-size: 15px; margin: 0 0 15px 0; opacity: 0.9;">Последнее сканирование</h3>
+            <div class="history-item">
+                <div class="scan-preview" style="width: 45px; height: 45px; border-radius: 12px;">
+                    <div class="mole-spot" style="width: 20px; height: 18px;"></div>
+                </div>
+                <div class="history-info">
+                    <div class="history-title">Левое предплечье</div>
+                    <div class="history-date">17 Марта, 2026</div>
+                </div>
+                <div class="status-badge">
+                    <div class="status-dot"></div>
+                    Стабильно
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="width: 65%;">
-                    <div class="progress-title">Scan Progress</div>
-                    <p class="progress-subtext">Now you are successfully checked 5/90 moles</p>
+                    <div class="progress-title">Прогресс карты тела</div>
+                    <p class="progress-subtext">Вы успешно проверили 5 из 90 родинок на теле.</p>
                 </div>
                 <div class="body-placeholder">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a0aabf" stroke-width="1.5">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a0aabf" stroke-width="1.5">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                 </div>
             </div>
-
             <div class="slider-container">
-                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; font-weight: 600;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; font-weight: 600;">
                     <span style="color: #a2d2a2;">5</span>
-                    <span style="opacity: 0.4;">moles from</span>
-                    <span style="opacity: 0.4;">90</span>
+                    <span style="opacity: 0.4;">из 90</span>
                 </div>
                 <div class="slider-track">
                     <div class="slider-fill"></div>
                     <div class="slider-thumb"></div>
                 </div>
             </div>
-
-            <div class="toggle-row">
-                <div class="toggle-item active">kcal/day ✓</div>
-                <div class="toggle-item">g/day</div>
-            </div>
         </div>
+
+        <div class="card" style="display: flex; align-items: center; gap: 15px; cursor: pointer;">
+            <div class="edu-icon-wrapper">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+            </div>
+            <div style="flex-grow: 1;">
+                <div style="font-weight: 600; font-size: 14px;">Правило ABCDE</div>
+                <div style="font-size: 11px; opacity: 0.7; margin-top: 2px;">Как распознать опасную родинку</div>
+            </div>
+            <div style="color: #a0aabf; font-weight: 600;">›</div>
+        </div>
+
     </div>
 
     <div class="tab-bar">
         <div class="tab-item">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <rect x="3" y="3" width="18" height="18" rx="4"></rect>
-                <circle cx="8.5" cy="8.5" r="2.5"></circle>
-                <path d="M21 15l-5-5L5 21"></path>
-            </svg>
-            <span>Moments</span>
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="4"></rect><circle cx="8.5" cy="8.5" r="2.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+            <span>Дневник</span>
         </div>
-        
         <div class="tab-item">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                <path d="M12 8v8M8 12h8"></path>
-            </svg>
-            <span>Care</span>
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>Защита</span>
         </div>
-        
         <div class="tab-item">
             <div class="tab-icon-circle">
-                <svg class="sf-icon sf-icon-scanner" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="margin:0;">
-                    <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"></path>
-                </svg>
+                <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="margin:0;"><path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"></path></svg>
             </div>
         </div>
-        
         <div class="tab-item">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-            </svg>
-            <span>History</span>
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>История</span>
         </div>
-        
         <div class="tab-item">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path>
-            </svg>
-            <span>Read</span>
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>
+            <span>Статьи</span>
         </div>
     </div>
 </div>
