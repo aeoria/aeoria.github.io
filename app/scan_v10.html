@@ -3,238 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DermAI - Neumorphic Main</title>
+    <title>DermAI - Scan V9 with Mole Photo</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         :root {
-            /* Базовый цвет "пластика" */
             --bg: #e0e5ec;
-            --text-main: #2d3436;
-            --text-muted: #8E8E93;
-            
             --blue: #007AFF;
             --green: #34C759;
             --orange: #FF9500;
-
-            /* Тени для неоморфизма */
-            --shadow-light: rgba(255, 255, 255, 0.8);
-            --shadow-dark: rgba(163, 177, 198, 0.6);
-            
-            /* Эффект выпуклости (Outset) */
-            --neu-outset: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
-            --neu-outset-sm: 4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
-            
-            /* Эффект вдавленности (Inset) */
-            --neu-inset: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+            --red: #FF3B30;
+            --text-main: #2d3436;
+            --text-muted: #8E8E93;
+            --neu-inset: inset 6px 6px 12px rgba(163, 177, 198, 0.6), inset -6px -6px 12px rgba(255, 255, 255, 0.8);
+            --neu-outset: 8px 8px 16px rgba(163, 177, 198, 0.6), -8px -8px 16px rgba(255, 255, 255, 0.8);
         }
 
-        body {
-            background-color: #1a1a1a;
-            font-family: 'Inter', sans-serif;
-            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
-            -webkit-font-smoothing: antialiased;
+        body { background-color: #1a1a1a; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; overflow: hidden; }
+        .iphone-frame { width: 375px; height: 812px; border-radius: 44px; border: 8px solid #333; position: relative; overflow: hidden; background-color: #000; box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
+
+        #videoBg { position: absolute; width: 100%; height: 100%; object-fit: cover; filter: blur(20px); transform: scale(1.1); z-index: 1; opacity: 0.6; }
+
+        .sheet { position: absolute; bottom: 0; left: 0; right: 0; height: 92%; background: #fff; border-radius: 40px 40px 0 0; z-index: 100; padding: 20px; overflow-y: auto; scrollbar-width: none; }
+        .sheet::-webkit-scrollbar { display: none; }
+        .handle { width: 40px; height: 4px; background: #E0E0E0; border-radius: 10px; margin: 0 auto 20px; }
+
+        /* ВЕРХНЯЯ ЧАСТЬ С ФОТО */
+        .result-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-right: 10px;}
+        
+        /* Стилизация фото родинки */
+        .mole-photo-preview {
+            width: 70px; height: 70px;
+            border-radius: 18px;
+            background-color: #f0f0f0;
+            background-image: url('mole_photo.jpg'); /* Убедитесь, что файл mole_photo.jpg находится в той же папке */
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0; /* Чтобы не сжималось */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
-        .iphone-frame {
-            width: 375px; height: 812px;
-            background-color: var(--bg);
-            border-radius: 44px; border: 8px solid #333;
-            position: relative; overflow: hidden;
-            display: flex; flex-direction: column; color: var(--text-main);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-        }
+        .status-info { flex-grow: 1; display: flex; flex-direction: column; gap: 4px;}
 
-        .status-bar { padding: 16px 24px 4px; display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; }
+        .status-badge { 
+            display: inline-flex; align-items: center; gap: 8px; 
+            background: #F6FFF9; border: 1px solid rgba(52, 199, 89, 0.1);
+            padding: 8px 12px; border-radius: 16px; 
+            color: var(--green);
+        }
+        .status-badge h2 { margin: 0; font-size: 16px; font-weight: 800; }
+        .risk-text { font-size: 12px; color: var(--green); font-weight: 600; }
 
-        .header { padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; }
-        .header-title h1 { font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
-        .avatar { 
-            width: 44px; height: 44px; border-radius: 50%; 
-            background: var(--bg); box-shadow: var(--neu-outset-sm); 
-            padding: 3px;
-        }
-        .avatar-inner { 
-            width: 100%; height: 100%; border-radius: 50%; 
-            background: #d1d8e0; overflow: hidden; box-shadow: var(--neu-inset);
-            display: flex; justify-content: center; align-items: flex-end;
-        }
+        /* ABCDE GRID (Based on v3 Icons & Style) */
+        .abcde-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .abcde-item { background: #F8F9FA; padding: 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; position: relative; }
+        .abcde-letter { font-size: 22px; font-weight: 800; color: #E0E0E0; width: 24px; text-align: center; }
+        .abcde-icon { font-size: 18px; display: flex; align-items: center; }
+        .abcde-info { display: flex; flex-direction: column; }
+        .abcde-label { font-size: 10px; font-weight: 600; color: var(--text-muted); }
+        .abcde-val { font-size: 13px; font-weight: 700; color: var(--text-main); }
 
-        .content { padding: 10px 24px; flex-grow: 1; overflow-y: auto; }
+        /* Evolution element (Wide) */
+        .abcde-item.full { grid-column: span 2; margin-top: 4px; margin-bottom: 24px;}
 
-        /* Карточки */
-        .neu-card {
-            background: var(--bg);
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: var(--neu-outset);
-            margin-bottom: 24px;
-            display: flex;
-            flex-direction: column;
-        }
+        /* INSIGHT CARD */
+        .ai-insight-card { background: #fff; border-radius: 24px; padding: 18px; box-shadow: var(--neu-outset); border: 1px solid #f0f0f0; margin-bottom: 24px; }
+        .insight-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; color: var(--blue); font-size: 13px; font-weight: 700; }
+        .insight-text { font-size: 12.5px; line-height: 1.5; color: #444; }
 
-        /* УФ Виджет */
-        .uv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
-        .uv-location { display: flex; align-items: center; gap: 4px; font-size: 15px; font-weight: 700; }
-        .uv-val { text-align: right; }
-        .uv-val div:first-child { font-size: 42px; font-weight: 700; line-height: 1; color: var(--orange); }
-        .uv-val div:last-child { font-size: 14px; font-weight: 600; }
+        /* OBSERVATION PLAN */
+        .observation-card { background: #f4f7ff; border-radius: 28px; padding: 22px; border: 1.5px solid #eef2ff; position: relative; margin-bottom: 24px; }
+        .premium-tag { position: absolute; top: 22px; right: 22px; font-size: 10px; font-weight: 800; color: var(--blue); }
+        .obs-title { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+        .obs-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 22px; line-height: 1.4; }
+        
+        .timeline-visual { display: flex; align-items: center; gap: 15px; margin-bottom: 24px; }
+        .mole-frame { width: 50px; height: 50px; border-radius: 14px; background: #fff; box-shadow: var(--neu-inset); display: flex; align-items: center; justify-content: center; }
+        .mole-dot-static { width: 22px; height: 18px; background: #5c4033; border-radius: 40% 60% 70% 30%; }
+        .arrow { color: var(--blue); font-weight: bold; }
+        .next-frame { width: 50px; height: 50px; border-radius: 14px; border: 2.5px dashed #cbd5e0; display: flex; align-items: center; justify-content: center; color: #cbd5e0; font-size: 20px; font-weight: 700; }
+        
+        /* BUTTONS */
+        .cta-primary { width: 100%; background: var(--blue); color: white; border: none; padding: 20px; border-radius: 22px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 8px 25px rgba(0,122,255,0.3); margin-bottom: 12px; transition: 0.2s; }
+        .cta-secondary { width: 100%; background: var(--bg); color: var(--text-main); border: none; padding: 18px; border-radius: 22px; font-weight: 600; font-size: 15px; cursor: pointer; box-shadow: var(--neu-outset); transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        .cta-primary:active { transform: scale(0.98); }
+        .cta-secondary:active { box-shadow: var(--neu-inset); transform: scale(0.98); }
 
-        /* Вдавленная шкала */
-        .uv-scale-track {
-            height: 10px; border-radius: 5px; background: var(--bg);
-            box-shadow: var(--neu-inset);
-            position: relative; overflow: hidden; margin-bottom: 20px;
-        }
-        .uv-scale-fill {
-            width: 40%; height: 100%;
-            background: linear-gradient(to right, var(--green), var(--orange));
-            border-radius: 5px;
-        }
-
-        /* Вдавленная область под SPF */
-        .spf-banner {
-            background: var(--bg);
-            box-shadow: var(--neu-inset);
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .spf-icon-box {
-            width: 36px; height: 36px; border-radius: 10px;
-            background: var(--bg); box-shadow: var(--neu-outset-sm);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--blue);
-        }
-
-        /* Блок Карты Тела */
-        .body-card { display: flex; flex-direction: row; gap: 20px; align-items: center; }
-        .body-progress {
-            width: 70px; height: 70px; border-radius: 50%;
-            background: var(--bg); box-shadow: var(--neu-outset-sm);
-            display: flex; align-items: center; justify-content: center;
-            position: relative;
-        }
-        .body-progress-inner {
-            width: 54px; height: 54px; border-radius: 50%;
-            background: var(--bg); box-shadow: var(--neu-inset);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: 700; color: var(--green);
-        }
-
-        /* Кнопка */
-        .scan-btn-wrapper { padding: 24px; position: absolute; bottom: 80px; width: calc(100% - 48px); }
-        .scan-btn {
-            width: 100%;
-            background: var(--blue);
-            color: white;
-            border: none;
-            padding: 20px;
-            border-radius: 20px;
-            font-size: 18px;
-            font-weight: 600;
-            box-shadow: 6px 6px 14px rgba(0, 85, 179, 0.4), -6px -6px 14px rgba(77, 166, 255, 0.6);
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .scan-btn:active {
-            box-shadow: inset 4px 4px 8px rgba(0, 85, 179, 0.5), inset -4px -4px 8px rgba(77, 166, 255, 0.5);
-            transform: scale(0.98);
-        }
-
-        /* Нижний таб-бар */
-        .tab-bar {
-            position: absolute; bottom: 0; width: 100%; height: 84px;
-            background: var(--bg);
-            display: flex; justify-content: space-around; align-items: center;
-            padding-bottom: 20px;
-            box-shadow: 0 -10px 20px var(--shadow-dark);
-            border-radius: 0 0 36px 36px;
-        }
-        .tab-item { color: var(--text-muted); font-size: 11px; font-weight: 600; text-align: center; }
-        .tab-item.active { color: var(--blue); }
     </style>
 </head>
 <body>
 
 <div class="iphone-frame">
-    <div class="status-bar">
-        <span>13:13</span>
-        <span>📶 🔋</span>
-    </div>
+    <video id="videoBg" autoplay playsinline muted></video>
+    
+    <div class="sheet">
+        <div class="handle"></div>
 
-    <header class="header">
-        <div class="header-title">
-            <h1>DermAI</h1>
-            <p style="margin: 0; font-size: 13px; color: var(--text-muted); font-weight: 500;">Четверг, 19 Марта</p>
-        </div>
-        <div class="avatar">
-            <div class="avatar-inner">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#8E8E93">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
+        <div class="result-header">
+            <div class="mole-photo-preview"></div>
+            
+            <div class="status-info">
+                <div class="status-badge">
+                    <span style="font-size: 18px;">✓</span>
+                    <h2>Все в порядке</h2>
+                </div>
+                <div class="risk-text">Риск: Низкий (2%)</div>
             </div>
         </div>
-    </header>
 
-    <div class="content">
-        <div class="neu-card">
-            <div class="uv-header">
-                <div class="uv-location">
-                    <span style="color: var(--blue)">📍</span> Варшава
-                </div>
-                <div class="uv-val">
-                    <div>3</div>
-                    <div>Умерен.</div>
+        <div class="abcde-grid">
+            <div class="abcde-item">
+                <span class="abcde-letter">A</span>
+                <div class="abcde-icon">⊕</div>
+                <div class="abcde-info">
+                    <span class="abcde-label">Асимметрия</span>
+                    <span class="abcde-val">Симметрично</span>
                 </div>
             </div>
-            <div class="uv-scale-track">
-                <div class="uv-scale-fill"></div>
+            <div class="abcde-item">
+                <span class="abcde-letter">B</span>
+                <div class="abcde-icon">◎</div>
+                <div class="abcde-info">
+                    <span class="abcde-label">Границы</span>
+                    <span class="abcde-val">Четкие</span>
+                </div>
             </div>
-            <div class="spf-banner">
-                <div class="spf-icon-box">🛡️</div>
-                <div style="font-size: 13px; font-weight: 500;">
-                    <span style="font-weight: 700;">Нанесите SPF 30+</span><br>
-                    Пик УФ сегодня: 5 (в 14:00)
+            <div class="abcde-item">
+                <span class="abcde-letter">C</span>
+                <div class="abcde-icon">❂</div>
+                <div class="abcde-info">
+                    <span class="abcde-label">Цвет</span>
+                    <span class="abcde-val">Однородный</span>
+                </div>
+            </div>
+            <div class="abcde-item">
+                <span class="abcde-letter">D</span>
+                <div class="abcde-icon">⊘</div>
+                <div class="abcde-info">
+                    <span class="abcde-label">Диаметр</span>
+                    <span class="abcde-val">3.2 мм</span>
+                </div>
+            </div>
+            <div class="abcde-item full">
+                <span class="abcde-letter">E</span>
+                <div class="abcde-icon">🕒</div>
+                <div class="abcde-info">
+                    <span class="abcde-label">Развитие</span>
+                    <span class="abcde-val">Без изменений (Baseline)</span>
                 </div>
             </div>
         </div>
 
-        <div class="neu-card body-card">
-            <div class="body-progress">
-                <div class="body-progress-inner">5%</div>
+        <div class="ai-insight-card">
+            <div class="insight-header">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+                Инсайт системы
             </div>
-            <div>
-                <h3 style="margin: 0; font-size: 16px;">Карта тела</h3>
-                <p style="margin: 4px 0 0; font-size: 12px; color: var(--text-muted); font-weight: 500;">5 из 90 зон проверено</p>
+            <div class="insight-text">
+                Ваш <b>фототип II</b> в сочетании с весенним UV-индексом в Варшаве (3.9) ускоряет регенерацию меланоцитов. Рекомендуем осматривать эту зону каждые <b>30 дней</b>.
             </div>
         </div>
 
-        <div class="neu-card" style="flex-direction: row; align-items: center; gap: 16px;">
-            <div class="spf-icon-box" style="font-size: 20px;">👱🏻‍♀️</div>
-            <div>
-                <h3 style="margin: 0; font-size: 16px;">Тип II</h3>
-                <p style="margin: 2px 0 0; font-size: 12px; color: var(--text-muted); font-weight: 500;">Светлая кожа</p>
+        <div class="observation-card">
+            <div class="premium-tag">PREMIUM</div>
+            <div class="obs-title">План наблюдения</div>
+            <div class="obs-desc">ИИ сохранил снимок как эталон. Следующая проверка необходима через 180 дней.</div>
+            
+            <div class="timeline-visual">
+                <div class="mole-frame"><div class="mole-dot-static"></div></div>
+                <div class="arrow">→</div>
+                <div class="next-frame">?</div>
+                <div>
+                    <div style="font-size: 13px; font-weight: 700;">Сентябрь 2026</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">Сравнение динамики</div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <div class="scan-btn-wrapper">
-        <button class="scan-btn">
-            <span style="font-size: 24px;">📷</span> Начать проверку
+            <button class="cta-primary">Активировать таймлапс</button>
+        </div>
+
+        <button class="cta-secondary" onclick="window.location.reload()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            Проверить другую зону
         </button>
-    </div>
-
-    <div class="tab-bar">
-        <div class="tab-item active">🏠<br>Главная</div>
-        <div class="tab-item">🕒<br>История</div>
-        <div class="tab-item">🧴<br>Защита</div>
-        <div class="tab-item">👤<br>Профиль</div>
+        
+        <div style="height: 40px;"></div>
     </div>
 </div>
+
+<script>
+    // Камера для фона (визуал)
+    async function initCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+            document.getElementById('videoBg').srcObject = stream;
+        } catch (e) { console.log("Камера недоступна для фона"); }
+    }
+    window.onload = initCamera;
+</script>
 
 </body>
 </html>
