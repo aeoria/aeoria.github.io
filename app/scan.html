@@ -1,1 +1,313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DermAI - Live Camera Scan</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+        body {
+            background-color: #1a1a1a;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .iphone-frame {
+            width: 375px; height: 812px;
+            border-radius: 44px; border: 8px solid #333;
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column; color: #fff;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            background-color: #000;
+        }
+
+        /* --- СИСТЕМА КАМЕРЫ --- */
+        
+        /* 1. Фоновое видео (Размытое) */
+        .video-bg {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: blur(25px);
+            transform: scale(1.15); /* Увеличиваем, чтобы скрыть белые края от размытия */
+            z-index: 1;
+        }
+
+        /* 2. Затемняющий тинт поверх размытого фона */
+        .tint-overlay {
+            position: absolute; inset: 0;
+            background: rgba(30, 20, 15, 0.45); /* Теплый темный оттенок как на скрине */
+            z-index: 2;
+        }
+
+        /* 3. Контейнер Видоискателя */
+        .viewfinder-container {
+            position: absolute;
+            top: 150px; left: 24px; right: 24px; height: 380px;
+            border-radius: 40px;
+            z-index: 5;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            /* Скрываем всё, что выходит за рамки */
+            overflow: hidden; 
+        }
+
+        /* 4. Четкое видео внутри видоискателя */
+        .video-fg {
+            position: absolute;
+            /* Смещаем видео назад, чтобы оно идеально совпало с фоновым */
+            top: -150px; left: -24px;
+            width: 375px; height: 812px;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        /* Уголки рамки (Брекеты) */
+        .corners-wrapper {
+            position: absolute; inset: 0; z-index: 6; pointer-events: none;
+        }
+        .corner { position: absolute; width: 35px; height: 35px; border-color: rgba(255,255,255,0.9); border-style: solid; border-width: 0; border-radius: 12px; }
+        .c-tl { top: -2px; left: -2px; border-top-width: 2px; border-left-width: 2px; }
+        .c-tr { top: -2px; right: -2px; border-top-width: 2px; border-right-width: 2px; }
+        .c-bl { bottom: -2px; left: -2px; border-bottom-width: 2px; border-left-width: 2px; }
+        .c-br { bottom: -2px; right: -2px; border-bottom-width: 2px; border-right-width: 2px; }
+
+        /* --- ПОЛЬЗОВАТЕЛЬСКИЙ ИНТЕРФЕЙС --- */
+
+        .status-bar { 
+            position: absolute; top: 0; left: 0; right: 0;
+            padding: 16px 24px 4px; display: flex; justify-content: space-between; 
+            font-size: 14px; font-weight: 600; z-index: 10;
+        }
+
+        .top-controls {
+            position: absolute; top: 65px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 10;
+        }
+        
+        .circle-btn {
+            width: 44px; height: 44px; border-radius: 50%; border: none;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            display: flex; align-items: center; justify-content: center;
+            color: white; cursor: pointer; transition: 0.2s;
+        }
+        .circle-btn:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.95); }
+
+        .scan-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            padding: 8px 16px; border-radius: 20px;
+            font-size: 13px; font-weight: 500;
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        /* Элементы управления камерой внизу */
+        .camera-actions {
+            position: absolute; bottom: 120px; left: 0; right: 0;
+            display: flex; justify-content: space-evenly; align-items: center;
+            z-index: 10;
+        }
+
+        .action-icon { background: transparent; border: none; color: white; cursor: pointer; transition: 0.2s; padding: 10px;}
+        .action-icon:active { opacity: 0.6; transform: scale(0.9); }
+
+        /* Кнопка затвора (Шаттер) */
+        .shutter-wrapper {
+            position: relative; display: flex; align-items: center; justify-content: center;
+        }
+        .shutter-btn {
+            width: 76px; height: 76px; border-radius: 50%;
+            background: #fff; cursor: pointer;
+            /* Черная обводка с белым свечением снаружи */
+            border: 5px solid #1c1c1c;
+            box-shadow: 0 0 0 3px #fff, 0 5px 15px rgba(0,0,0,0.4);
+            transition: transform 0.1s, background 0.1s;
+        }
+        .shutter-btn:active { transform: scale(0.9); background: #e0e0e0; }
+
+        /* Плавающий нижний Tab Bar (Glassmorphism) */
+        .floating-tab-bar { 
+            position: absolute; bottom: 20px; left: 20px; right: 20px; height: 65px; 
+            background: rgba(60, 60, 65, 0.6); /* Темное матовое стекло */
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            display: flex; justify-content: space-around; align-items: center; 
+            border-radius: 35px; z-index: 20; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .tab-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.6); cursor: pointer; transition: 0.2s;}
+        .tab-item.active { color: #fff; }
+        .tab-item:active { opacity: 0.7; }
+        
+        /* Центральная фиолетовая кнопка скана */
+        .scan-tab {
+            width: 48px; height: 48px; border-radius: 50%; 
+            background: #7a5cff; /* Фиолетовый цвет как на скрине */
+            display: flex; align-items: center; justify-content: center;
+            color: white; 
+            box-shadow: 0 4px 15px rgba(122, 92, 255, 0.4);
+        }
+
+        /* Эффект вспышки при сканировании */
+        .flash-overlay {
+            position: absolute; inset: 0; background: white; opacity: 0; z-index: 100; pointer-events: none; transition: opacity 0.1s;
+        }
+        .flash-overlay.active { opacity: 0.8; transition: opacity 0.05s; }
+
+        /* Заглушка, если камера недоступна */
+        .camera-fallback {
+            position: absolute; inset: 0; background: #333; display: none; 
+            align-items: center; justify-content: center; color: white; text-align: center; padding: 20px; z-index: 0; font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="iphone-frame">
+    <div class="flash-overlay" id="flashOverlay"></div>
+    <div class="camera-fallback" id="cameraFallback">Камера недоступна.<br>Пожалуйста, дайте разрешение в браузере.</div>
+
+    <video class="video-bg" id="videoBg" autoplay playsinline muted></video>
+    <div class="tint-overlay"></div>
+
+    <div class="status-bar">
+        <span>13:13</span>
+        <span style="letter-spacing: 2px;">📶 🔋</span> 
+    </div>
+
+    <div class="top-controls">
+        <button class="circle-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2L5.5 13h7l-2 9 9-11h-7l2-9z"></path><line x1="4" y1="4" x2="20" y2="20"></line></svg>
+        </button>
+        
+        <div class="scan-badge">
+            <span style="font-size: 14px;">✋</span> 1 scan left
+        </div>
+        
+        <button class="circle-btn" onclick="window.location.href='/'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+
+    <div class="viewfinder-container">
+        <video class="video-fg" id="videoFg" autoplay playsinline muted></video>
+        
+        <div class="corners-wrapper">
+            <div class="corner c-tl"></div>
+            <div class="corner c-tr"></div>
+            <div class="corner c-bl"></div>
+            <div class="corner c-br"></div>
+        </div>
+    </div>
+
+    <div class="camera-actions">
+        <button class="action-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline><circle cx="19" cy="19" r="4" fill="white" stroke="white"></circle><line x1="19" y1="17" x2="19" y2="21" stroke="black"></line><line x1="17" y1="19" x2="21" y2="19" stroke="black"></line></svg>
+        </button>
+        
+        <div class="shutter-wrapper" onclick="takePhoto()">
+            <div class="shutter-btn"></div>
+        </div>
+        
+        <button class="action-icon" onclick="flipCamera()">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+        </button>
+    </div>
+
+    <div class="floating-tab-bar">
+        <div class="tab-item" onclick="window.location.href='/'">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"></rect><circle cx="8.5" cy="8.5" r="2.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+            <span>Main</span>
+        </div>
+        <div class="tab-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>
+            <span>History</span>
+        </div>
+        
+        <div class="tab-item active">
+            <div class="scan-tab">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+            </div>
+        </div>
+        
+        <div class="tab-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>
+            <span>Tips</span>
+        </div>
+        <div class="tab-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>Settings</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentStream = null;
+    let useFrontCamera = false;
+
+    async function initCamera() {
+        const videoBg = document.getElementById('videoBg');
+        const videoFg = document.getElementById('videoFg');
+        const fallback = document.getElementById('cameraFallback');
+
+        // Останавливаем предыдущий поток, если есть (при смене камеры)
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+        }
+
+        const constraints = {
+            video: { 
+                facingMode: useFrontCamera ? "user" : "environment",
+                width: { ideal: 1080 },
+                height: { ideal: 1920 }
+            }
+        };
+
+        try {
+            currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+            
+            // Направляем один и тот же поток в оба video тега
+            videoBg.srcObject = currentStream;
+            videoFg.srcObject = currentStream;
+            
+            fallback.style.display = 'none';
+        } catch (err) {
+            console.error("Ошибка доступа к камере: ", err);
+            fallback.style.display = 'flex'; // Показываем сообщение об ошибке
+        }
+    }
+
+    // Имитация вспышки и "снимка"
+    function takePhoto() {
+        const flash = document.getElementById('flashOverlay');
+        flash.classList.add('active');
+        
+        setTimeout(() => {
+            flash.classList.remove('active');
+            // Здесь в реальном приложении был бы переход на экран анализа
+        }, 150);
+    }
+
+    // Смена камеры (фронтальная/основная)
+    function flipCamera() {
+        useFrontCamera = !useFrontCamera;
+        
+        // Зеркалим видео, если камера фронтальная
+        const transformValue = useFrontCamera ? 'scaleX(-1)' : 'scaleX(1)';
+        document.getElementById('videoBg').style.transform = `scale(1.15) ${transformValue}`;
+        document.getElementById('videoFg').style.transform = transformValue;
+        
+        initCamera();
+    }
+
+    // Запускаем камеру при загрузке страницы
+    window.onload = initCamera;
+</script>
+
+</body>
+</html>
