@@ -3,152 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DermAI - iOS HIG Prototype</title>
+    <title>DermAI - Modern Bento UI</title>
     <style>
         :root {
-            /* iOS System Colors */
-            --bg-color: #F2F2F7;         /* System Grouped Background */
-            --card-bg: #FFFFFF;          /* Pure white for elevation */
-            --text-primary: #000000;     /* High contrast */
-            --text-secondary: #8E8E93;   /* System Gray */
-            --accent-blue: #007AFF;      /* System Blue - Trust/Medical */
-            --accent-green: #34C759;     /* System Green - Safe/Stable */
-            --accent-orange: #FF9500;    /* System Orange - Warning/Attention */
-            --divider: #E5E5EA;          /* System Gray 5 */
-            
-            /* HIG Shadows */
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0,0,0,0.02);
-            --btn-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
+            --bg-color: #F2F2F7;
+            --card-bg: #FFFFFF;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --accent-blue: #007AFF;
+            --accent-blue-light: #E5F1FF;
+            --accent-green: #34C759;
+            --accent-orange: #FF9500;
+            --divider: #E5E5EA;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+            --shadow-blue: 0 8px 20px rgba(0, 122, 255, 0.25);
         }
 
         body {
             background-color: #1a1a1a;
-            /* Нативный стек шрифтов Apple */
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            /* Используем системные шрифты, включая закругленный шрифт для цифр */
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
             -webkit-font-smoothing: antialiased;
         }
 
         .iphone-frame {
-            width: 375px;
-            height: 812px;
+            width: 375px; height: 812px;
             background-color: var(--bg-color);
-            border-radius: 44px; /* Форма iPhone */
-            border: 8px solid #333;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            border-radius: 44px; border: 8px solid #333;
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
             color: var(--text-primary);
             box-shadow: 0 30px 60px rgba(0,0,0,0.6);
         }
 
-        /* Status Bar */
-        .status-bar { padding: 14px 28px; display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
-
-        /* Header (Large Title) */
-        header { padding: 10px 20px 8px; }
-        h1 { font-size: 34px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
-
-        /* Content Area */
-        .content {
-            padding: 12px 20px 100px; /* Отступ снизу для Tab Bar */
-            flex-grow: 1;
-            overflow-y: auto;
-            scrollbar-width: none;
+        /* Status Bar & Header */
+        .status-bar { padding: 14px 28px; display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; z-index: 10; }
+        
+        .header { 
+            padding: 10px 20px 20px; 
+            display: flex; justify-content: space-between; align-items: flex-end;
         }
+        .greeting p { margin: 0; font-size: 14px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .greeting h1 { margin: 2px 0 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+        .avatar { 
+            width: 44px; height: 44px; border-radius: 50%; 
+            background: linear-gradient(135deg, #c2e9fb 0%, #a1c4fd 100%);
+            box-shadow: var(--shadow-sm); border: 2px solid white;
+        }
+
+        /* Content Area (Hidden Scrollbar) */
+        .content { padding: 0 20px 100px; flex-grow: 1; overflow-y: auto; scrollbar-width: none; }
         .content::-webkit-scrollbar { display: none; }
 
-        /* iOS Cards */
-        .card {
+        /* --- BENTO GRID COMPOSITION --- */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .bento-card {
             background: var(--card-bg);
-            border-radius: 20px;
-            padding: 18px;
-            margin-bottom: 16px;
-            box-shadow: var(--card-shadow);
+            border-radius: 24px;
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
         }
 
-        /* Sun Protection Alert (Combined with UV) */
-        .uv-card { display: flex; align-items: center; gap: 16px; }
-        .uv-icon { 
-            width: 48px; height: 48px; border-radius: 14px; 
-            background: rgba(255, 149, 0, 0.1); color: var(--accent-orange);
-            display: flex; align-items: center; justify-content: center;
+        /* Square 1: UV Index */
+        .uv-card { justify-content: space-between; }
+        .bento-title { font-size: 14px; color: var(--text-secondary); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .uv-value-container { display: flex; align-items: baseline; gap: 4px; margin-top: 8px; }
+        .uv-number { font-size: 42px; font-weight: 700; font-family: ui-rounded, "SF Pro Rounded", sans-serif; color: var(--accent-orange); letter-spacing: -1px; }
+        .uv-status { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+        .uv-graph { height: 6px; border-radius: 3px; background: linear-gradient(to right, #34C759, #FFCC00, #FF9500); margin-top: 12px; position: relative; }
+        .uv-dot { width: 12px; height: 12px; background: white; border: 2px solid var(--accent-orange); border-radius: 50%; position: absolute; top: -3px; left: 30%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+        /* Square 2: Body Map Progress */
+        .progress-card { background: linear-gradient(145deg, #ffffff, #f8f9fc); }
+        .body-map-visual { flex-grow: 1; display: flex; align-items: center; justify-content: center; margin: 10px 0; }
+        .progress-stats { font-size: 24px; font-weight: 700; font-family: ui-rounded, sans-serif; }
+        .progress-sub { font-size: 12px; color: var(--text-secondary); }
+
+        /* Full Width Horizontal: Main Action */
+        .scan-action-card {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #007AFF 0%, #0056b3 100%);
+            border-radius: 24px; padding: 20px;
+            color: white; box-shadow: var(--shadow-blue);
+            display: flex; align-items: center; justify-content: space-between;
+            position: relative; overflow: hidden;
         }
-        .uv-info { flex-grow: 1; }
-        .uv-title { font-size: 17px; font-weight: 600; margin-bottom: 2px; }
-        .uv-subtitle { font-size: 13px; color: var(--text-secondary); line-height: 1.3; }
-        .uv-value { font-size: 28px; font-weight: 700; color: var(--accent-orange); }
-
-        /* Primary Action Button */
-        .scan-btn-container { margin-bottom: 20px; margin-top: 8px; }
-        .scan-main-btn {
-            background: var(--accent-blue);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 18px 20px;
-            border-radius: 16px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: var(--btn-shadow);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            transition: opacity 0.2s;
+        /* Декоративный круг для объема */
+        .scan-action-card::after {
+            content: ''; position: absolute; width: 150px; height: 150px;
+            background: rgba(255,255,255,0.1); border-radius: 50%;
+            top: -50px; right: -20px;
         }
-        .scan-main-btn:active { opacity: 0.8; }
-        .scan-hint { text-align: center; font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
+        .scan-text h3 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
+        .scan-text p { margin: 4px 0 0; font-size: 13px; opacity: 0.8; }
+        .scan-btn-icon { 
+            width: 48px; height: 48px; border-radius: 16px; 
+            background: white; color: var(--accent-blue);
+            display: flex; align-items: center; justify-content: center; z-index: 1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
 
-        /* Section Titles */
-        .section-title { font-size: 20px; font-weight: 600; margin: 24px 0 12px; letter-spacing: -0.3px; }
+        /* --- HORIZONTAL CAROUSEL --- */
+        .section-header { display: flex; justify-content: space-between; align-items: baseline; margin: 28px 0 16px; }
+        .section-header h2 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
+        .section-header a { font-size: 14px; color: var(--accent-blue); font-weight: 500; text-decoration: none; }
 
-        /* Recent Scan */
-        .history-item { display: flex; align-items: center; gap: 16px; }
-        .scan-preview { width: 50px; height: 50px; border-radius: 12px; background: #F2F2F7; display: flex; align-items: center; justify-content: center; border: 1px solid var(--divider); }
-        .mole-spot { width: 20px; height: 18px; background: #6b5040; border-radius: 50% 40% 60% 30%; filter: blur(1px); }
-        .history-info { flex-grow: 1; }
-        .history-title { font-size: 17px; font-weight: 500; }
-        .history-date { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
-        .status-badge { background: rgba(52, 199, 89, 0.12); color: #248A3D; font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 8px; }
+        .horizontal-scroll {
+            display: flex; gap: 16px; overflow-x: auto;
+            padding-bottom: 20px; /* Отступ для тени */
+            margin: 0 -20px; padding: 0 20px 20px; /* Выход за края экрана */
+            scrollbar-width: none;
+        }
+        .horizontal-scroll::-webkit-scrollbar { display: none; }
 
-        /* Body Map Progress */
-        .progress-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
-        .progress-text h4 { margin: 0 0 4px; font-size: 17px; font-weight: 500; }
-        .progress-text p { margin: 0; font-size: 13px; color: var(--text-secondary); }
-        
-        /* Native iOS Slider look */
-        .progress-bar-bg { height: 8px; background: var(--divider); border-radius: 4px; overflow: hidden; margin-top: 12px; }
-        .progress-bar-fill { height: 100%; width: 15%; background: var(--accent-blue); border-radius: 4px; }
+        /* Карточка недавнего сканирования */
+        .history-card {
+            min-width: 140px; background: var(--card-bg);
+            border-radius: 20px; padding: 14px;
+            box-shadow: var(--shadow-sm); flex-shrink: 0;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .history-img {
+            width: 100%; height: 80px; border-radius: 12px;
+            background: #E5E5EA; display: flex; align-items: center; justify-content: center;
+            overflow: hidden; position: relative;
+        }
+        /* Имитация дерматоскопа (рамка прицела) */
+        .history-img::before {
+            content: ''; position: absolute; width: 40px; height: 40px;
+            border: 1px dashed rgba(0,0,0,0.3); border-radius: 50%;
+        }
+        .mole-blob { width: 24px; height: 28px; background: #5c4033; border-radius: 40% 60% 70% 30%; filter: blur(0.5px); }
+        .history-info h4 { margin: 0; font-size: 14px; font-weight: 600; }
+        .history-info p { margin: 2px 0 0; font-size: 12px; color: var(--text-secondary); }
+        .status-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--accent-green); margin-top: 4px; }
+        .status-dot { width: 6px; height: 6px; background: var(--accent-green); border-radius: 50%; }
 
-        /* Education Card (iOS List Cell Style) */
-        .edu-cell { display: flex; align-items: center; gap: 16px; padding: 4px 0; }
-        .edu-icon { width: 32px; height: 32px; background: var(--accent-blue); border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center; }
-        .edu-content { flex-grow: 1; border-bottom: 1px solid var(--divider); padding-bottom: 12px; }
-        .edu-title { font-size: 17px; font-weight: 500; }
-        .edu-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
-        .chevron { color: #C7C7CC; font-size: 20px; font-weight: 600; padding-bottom: 12px; border-bottom: 1px solid var(--divider); }
+        /* Warning badge */
+        .status-warning { color: var(--accent-orange); }
+        .status-warning .status-dot { background: var(--accent-orange); }
 
-        /* iOS Tab Bar (Translucent Blur) */
+        /* Tab Bar */
         .tab-bar { 
-            position: absolute; bottom: 0; width: 100%; height: 83px; 
+            position: absolute; bottom: 0; width: 100%; height: 85px; 
             background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-top: 0.5px solid rgba(0,0,0,0.1);
-            display: flex; justify-content: space-around; padding-top: 8px; padding-bottom: 24px;
+            display: flex; justify-content: space-around; padding-top: 10px; padding-bottom: 24px;
             box-sizing: border-box; z-index: 100;
         }
-        .tab-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; color: var(--text-secondary); cursor: pointer; }
+        .tab-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; color: var(--text-secondary); }
         .tab-item.active { color: var(--accent-blue); }
         .sf-icon { width: 24px; height: 24px; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-        /* Apple-style floating action is less common, but we'll integrate it cleanly */
-        .scan-tab-icon { stroke-width: 2; width: 28px; height: 28px; }
     </style>
 </head>
 <body>
@@ -159,100 +175,107 @@
         <span style="letter-spacing: 2px;">📶 🔋</span> 
     </div>
 
-    <header>
-        <h1>DermAI</h1>
+    <header class="header">
+        <div class="greeting">
+            <p>Четверг, 19 Марта</p>
+            <h1>Доброе утро</h1>
+        </div>
+        <div class="avatar"></div>
     </header>
 
     <div class="content">
         
-        <div class="scan-btn-container">
-            <button class="scan-main-btn">
-                <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 20px; height: 20px;">
-                    <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"></path>
-                    <rect x="9" y="9" width="6" height="6" rx="1"></rect>
-                </svg>
-                Начать проверку
-            </button>
-            <div class="scan-hint">Быстрая 30-секундная проверка ИИ</div>
+        <div class="bento-grid">
+            
+            <div class="bento-card uv-card">
+                <div class="bento-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="6.34" y2="17.66"></line><line x1="17.66" y1="4.22" x2="19.78" y2="6.34"></line></svg>
+                    УФ-Индекс
+                </div>
+                <div>
+                    <div class="uv-value-container">
+                        <span class="uv-number">3</span>
+                        <span class="uv-status">Умеренно</span>
+                    </div>
+                    <div class="uv-graph">
+                        <div class="uv-dot"></div>
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-secondary); margin: 8px 0 0;">Рекомендуем SPF 30</p>
+                </div>
+            </div>
+
+            <div class="bento-card progress-card">
+                <div class="bento-title" style="color: var(--accent-blue);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Карта тела
+                </div>
+                
+                <div class="body-map-visual">
+                    <svg width="60" height="60" viewBox="0 0 36 36">
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--divider)" stroke-width="3"/>
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--accent-blue)" stroke-width="3" stroke-dasharray="15, 100" stroke-linecap="round"/>
+                    </svg>
+                    <div style="position: absolute; text-align: center;">
+                        <span class="progress-stats">5</span><br>
+                        <span style="font-size: 9px; font-weight: 600; color: var(--text-secondary);">из 90</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-card scan-action-card">
+                <div class="scan-text">
+                    <h3>Новое сканирование</h3>
+                    <p>Анализ нейросетью за 30 сек.</p>
+                </div>
+                <div class="scan-btn-icon">
+                    <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 26px; height: 26px;">
+                        <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"></path>
+                        <circle cx="12" cy="12" r="2" fill="currentColor"></circle>
+                    </svg>
+                </div>
+            </div>
         </div>
 
-        <div class="card uv-card">
-            <div class="uv-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"></line><line x1="17.66" y1="4.22" x2="19.78" y2="6.34"></line>
-                </svg>
-            </div>
-            <div class="uv-info">
-                <div class="uv-title">УФ-Индекс Умеренный</div>
-                <div class="uv-subtitle">Рекомендуется нанести SPF 30+.</div>
-            </div>
-            <div class="uv-value">3</div>
+        <div class="section-header">
+            <h2>Недавние</h2>
+            <a href="#">Все ›</a>
         </div>
-
-        <h2 class="section-title">Ваши родинки</h2>
-
-        <div class="card">
-            <div class="history-item">
-                <div class="scan-preview">
-                    <div class="mole-spot"></div>
+        
+        <div class="horizontal-scroll">
+            <div class="history-card">
+                <div class="history-img">
+                    <div class="mole-blob"></div>
                 </div>
                 <div class="history-info">
-                    <div class="history-title">Левое предплечье</div>
-                    <div class="history-date">17 Марта, 2026</div>
+                    <h4>Левое предплечье</h4>
+                    <p>Вчера, 14:20</p>
+                    <div class="status-badge">
+                        <div class="status-dot"></div> Стабильно
+                    </div>
                 </div>
-                <div class="status-badge">Стабильно</div>
             </div>
-        </div>
 
-        <div class="card">
-            <div class="progress-header">
-                <div class="progress-text">
-                    <h4>Карта тела</h4>
-                    <p>Отсканировано 5 из 90 зон</p>
+            <div class="history-card">
+                <div class="history-img">
+                    <div class="mole-blob" style="width: 30px; border-radius: 50% 30% 60% 40%; background: #4a2e21;"></div>
                 </div>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="1.5">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+                <div class="history-info">
+                    <h4>Правая лопатка</h4>
+                    <p>12 Марта</p>
+                    <div class="status-badge status-warning">
+                        <div class="status-dot"></div> Требует внимания
+                    </div>
+                </div>
             </div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill"></div>
-            </div>
-        </div>
 
-        <h2 class="section-title">Обучение</h2>
-
-        <div class="card" style="padding-bottom: 6px;">
-            <div class="edu-cell">
-                <div class="edu-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                    </svg>
+            <div class="history-card">
+                <div class="history-img" style="background: #f0f0f5;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8E8E93" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
                 </div>
-                <div class="edu-content">
-                    <div class="edu-title">Правило ABCDE</div>
-                    <div class="edu-subtitle">Как распознать опасную родинку</div>
+                <div class="history-info" style="justify-content: center; flex-grow: 1;">
+                    <h4 style="color: var(--accent-blue);">Добавить зону</h4>
+                    <p>Новое наблюдение</p>
                 </div>
-                <div class="chevron">›</div>
-            </div>
-            <div class="edu-cell" style="border: none;">
-                <div class="edu-icon" style="background: var(--text-secondary);">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                </div>
-                <div class="edu-content" style="border: none;">
-                    <div class="edu-title">Подготовка к приему</div>
-                    <div class="edu-subtitle">Вопросы дерматологу</div>
-                </div>
-                <div class="chevron" style="border: none;">›</div>
             </div>
         </div>
 
@@ -260,39 +283,19 @@
 
     <div class="tab-bar">
         <div class="tab-item active">
-            <svg class="sf-icon scan-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <rect x="3" y="3" width="18" height="18" rx="4"></rect>
-                <circle cx="8.5" cy="8.5" r="2.5"></circle>
-                <path d="M21 15l-5-5L5 21"></path>
-            </svg>
-            <span>Дневник</span>
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="4"></rect><circle cx="8.5" cy="8.5" r="2.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+            <span>Главная</span>
         </div>
         <div class="tab-item">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            </svg>
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
             <span>Защита</span>
         </div>
-        <div class="tab-item" style="color: var(--accent-blue);">
-            <svg class="sf-icon scan-tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 30px; height: 30px;">
-                <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"></path>
-                <circle cx="12" cy="12" r="3" fill="currentColor"></circle>
-            </svg>
-            <span>Скан</span>
-        </div>
         <div class="tab-item">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-            </svg>
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
             <span>История</span>
         </div>
         <div class="tab-item">
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 16v-4"></path>
-                <path d="M12 8h.01"></path>
-            </svg>
+            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
             <span>Профиль</span>
         </div>
     </div>
