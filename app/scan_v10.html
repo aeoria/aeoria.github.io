@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DermAI - Neumorphic Main</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            /* Базовый цвет "пластика" */
+            --bg: #e0e5ec;
+            --text-main: #2d3436;
+            --text-muted: #8E8E93;
+            
+            --blue: #007AFF;
+            --green: #34C759;
+            --orange: #FF9500;
+
+            /* Тени для неоморфизма */
+            --shadow-light: rgba(255, 255, 255, 0.8);
+            --shadow-dark: rgba(163, 177, 198, 0.6);
+            
+            /* Эффект выпуклости (Outset) */
+            --neu-outset: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+            --neu-outset-sm: 4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
+            
+            /* Эффект вдавленности (Inset) */
+            --neu-inset: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+        }
+
+        body {
+            background-color: #1a1a1a;
+            font-family: 'Inter', sans-serif;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .iphone-frame {
+            width: 375px; height: 812px;
+            background-color: var(--bg);
+            border-radius: 44px; border: 8px solid #333;
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column; color: var(--text-main);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        .status-bar { padding: 16px 24px 4px; display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; }
+
+        .header { padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .header-title h1 { font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
+        .avatar { 
+            width: 44px; height: 44px; border-radius: 50%; 
+            background: var(--bg); box-shadow: var(--neu-outset-sm); 
+            padding: 3px;
+        }
+        .avatar-inner { 
+            width: 100%; height: 100%; border-radius: 50%; 
+            background: #d1d8e0; overflow: hidden; box-shadow: var(--neu-inset);
+            display: flex; justify-content: center; align-items: flex-end;
+        }
+
+        .content { padding: 10px 24px; flex-grow: 1; overflow-y: auto; }
+
+        /* Карточки */
+        .neu-card {
+            background: var(--bg);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: var(--neu-outset);
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* УФ Виджет */
+        .uv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .uv-location { display: flex; align-items: center; gap: 4px; font-size: 15px; font-weight: 700; }
+        .uv-val { text-align: right; }
+        .uv-val div:first-child { font-size: 42px; font-weight: 700; line-height: 1; color: var(--orange); }
+        .uv-val div:last-child { font-size: 14px; font-weight: 600; }
+
+        /* Вдавленная шкала */
+        .uv-scale-track {
+            height: 10px; border-radius: 5px; background: var(--bg);
+            box-shadow: var(--neu-inset);
+            position: relative; overflow: hidden; margin-bottom: 20px;
+        }
+        .uv-scale-fill {
+            width: 40%; height: 100%;
+            background: linear-gradient(to right, var(--green), var(--orange));
+            border-radius: 5px;
+        }
+
+        /* Вдавленная область под SPF */
+        .spf-banner {
+            background: var(--bg);
+            box-shadow: var(--neu-inset);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .spf-icon-box {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: var(--bg); box-shadow: var(--neu-outset-sm);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--blue);
+        }
+
+        /* Блок Карты Тела */
+        .body-card { display: flex; flex-direction: row; gap: 20px; align-items: center; }
+        .body-progress {
+            width: 70px; height: 70px; border-radius: 50%;
+            background: var(--bg); box-shadow: var(--neu-outset-sm);
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .body-progress-inner {
+            width: 54px; height: 54px; border-radius: 50%;
+            background: var(--bg); box-shadow: var(--neu-inset);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: 700; color: var(--green);
+        }
+
+        /* Кнопка */
+        .scan-btn-wrapper { padding: 24px; position: absolute; bottom: 80px; width: calc(100% - 48px); }
+        .scan-btn {
+            width: 100%;
+            background: var(--blue);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 6px 6px 14px rgba(0, 85, 179, 0.4), -6px -6px 14px rgba(77, 166, 255, 0.6);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .scan-btn:active {
+            box-shadow: inset 4px 4px 8px rgba(0, 85, 179, 0.5), inset -4px -4px 8px rgba(77, 166, 255, 0.5);
+            transform: scale(0.98);
+        }
+
+        /* Нижний таб-бар */
+        .tab-bar {
+            position: absolute; bottom: 0; width: 100%; height: 84px;
+            background: var(--bg);
+            display: flex; justify-content: space-around; align-items: center;
+            padding-bottom: 20px;
+            box-shadow: 0 -10px 20px var(--shadow-dark);
+            border-radius: 0 0 36px 36px;
+        }
+        .tab-item { color: var(--text-muted); font-size: 11px; font-weight: 600; text-align: center; }
+        .tab-item.active { color: var(--blue); }
+    </style>
+</head>
+<body>
+
+<div class="iphone-frame">
+    <div class="status-bar">
+        <span>13:13</span>
+        <span>📶 🔋</span>
+    </div>
+
+    <header class="header">
+        <div class="header-title">
+            <h1>DermAI</h1>
+            <p style="margin: 0; font-size: 13px; color: var(--text-muted); font-weight: 500;">Четверг, 19 Марта</p>
+        </div>
+        <div class="avatar">
+            <div class="avatar-inner">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#8E8E93">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <div class="content">
+        <div class="neu-card">
+            <div class="uv-header">
+                <div class="uv-location">
+                    <span style="color: var(--blue)">📍</span> Варшава
+                </div>
+                <div class="uv-val">
+                    <div>3</div>
+                    <div>Умерен.</div>
+                </div>
+            </div>
+            <div class="uv-scale-track">
+                <div class="uv-scale-fill"></div>
+            </div>
+            <div class="spf-banner">
+                <div class="spf-icon-box">🛡️</div>
+                <div style="font-size: 13px; font-weight: 500;">
+                    <span style="font-weight: 700;">Нанесите SPF 30+</span><br>
+                    Пик УФ сегодня: 5 (в 14:00)
+                </div>
+            </div>
+        </div>
+
+        <div class="neu-card body-card">
+            <div class="body-progress">
+                <div class="body-progress-inner">5%</div>
+            </div>
+            <div>
+                <h3 style="margin: 0; font-size: 16px;">Карта тела</h3>
+                <p style="margin: 4px 0 0; font-size: 12px; color: var(--text-muted); font-weight: 500;">5 из 90 зон проверено</p>
+            </div>
+        </div>
+
+        <div class="neu-card" style="flex-direction: row; align-items: center; gap: 16px;">
+            <div class="spf-icon-box" style="font-size: 20px;">👱🏻‍♀️</div>
+            <div>
+                <h3 style="margin: 0; font-size: 16px;">Тип II</h3>
+                <p style="margin: 2px 0 0; font-size: 12px; color: var(--text-muted); font-weight: 500;">Светлая кожа</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="scan-btn-wrapper">
+        <button class="scan-btn">
+            <span style="font-size: 24px;">📷</span> Начать проверку
+        </button>
+    </div>
+
+    <div class="tab-bar">
+        <div class="tab-item active">🏠<br>Главная</div>
+        <div class="tab-item">🕒<br>История</div>
+        <div class="tab-item">🧴<br>Защита</div>
+        <div class="tab-item">👤<br>Профиль</div>
+    </div>
+</div>
+
+</body>
+</html>
