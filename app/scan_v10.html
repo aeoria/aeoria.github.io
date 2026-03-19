@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DermAI - Scan V9 with Mole Photo</title>
+    <title>DermAI - Scan V10 Final</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         :root {
             --bg: #e0e5ec;
             --blue: #007AFF;
             --green: #34C759;
-            --orange: #FF9500;
-            --red: #FF3B30;
             --text-main: #2d3436;
             --text-muted: #8E8E93;
             --neu-inset: inset 6px 6px 12px rgba(163, 177, 198, 0.6), inset -6px -6px 12px rgba(255, 255, 255, 0.8);
@@ -27,43 +25,30 @@
         .sheet::-webkit-scrollbar { display: none; }
         .handle { width: 40px; height: 4px; background: #E0E0E0; border-radius: 10px; margin: 0 auto 20px; }
 
-        /* ВЕРХНЯЯ ЧАСТЬ С ФОТО */
-        .result-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-right: 10px;}
+        /* ВЕРХНЯЯ ЧАСТЬ: ФОТО + ОБЪЕДИНЕННЫЙ СТАТУС */
+        .result-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
         
-        /* Стилизация фото родинки */
         .mole-photo-preview {
-            width: 70px; height: 70px;
-            border-radius: 18px;
-            background-color: #f0f0f0;
-            background-image: url('mole_photo.jpg'); /* Убедитесь, что файл mole_photo.jpg находится в той же папке */
-            background-size: cover;
-            background-position: center;
-            flex-shrink: 0; /* Чтобы не сжималось */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,0,0,0.05);
+            width: 72px; height: 72px; border-radius: 20px;
+            background-image: url('mole_photo.jpg'); /* Твое фото */
+            background-size: cover; background-position: center;
+            flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.12);
         }
 
-        .status-info { flex-grow: 1; display: flex; flex-direction: column; gap: 4px;}
-
-        .status-badge { 
-            display: inline-flex; align-items: center; gap: 8px; 
-            background: #F6FFF9; border: 1px solid rgba(52, 199, 89, 0.1);
-            padding: 8px 12px; border-radius: 16px; 
-            color: var(--green);
+        .status-block-combined {
+            flex-grow: 1; background: #F6FFF9; border: 1px solid rgba(52, 199, 89, 0.15);
+            padding: 12px 16px; border-radius: 20px; display: flex; flex-direction: column; gap: 2px;
         }
-        .status-badge h2 { margin: 0; font-size: 16px; font-weight: 800; }
-        .risk-text { font-size: 12px; color: var(--green); font-weight: 600; }
+        .status-title { display: flex; align-items: center; gap: 6px; color: var(--green); font-weight: 800; font-size: 17px; }
+        .status-subtitle { color: var(--green); font-size: 13px; font-weight: 600; opacity: 0.9; }
 
-        /* ABCDE GRID (Based on v3 Icons & Style) */
+        /* ABCDE GRID */
         .abcde-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-        .abcde-item { background: #F8F9FA; padding: 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; position: relative; }
+        .abcde-item { background: #F8F9FA; padding: 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; }
         .abcde-letter { font-size: 22px; font-weight: 800; color: #E0E0E0; width: 24px; text-align: center; }
-        .abcde-icon { font-size: 18px; display: flex; align-items: center; }
         .abcde-info { display: flex; flex-direction: column; }
         .abcde-label { font-size: 10px; font-weight: 600; color: var(--text-muted); }
         .abcde-val { font-size: 13px; font-weight: 700; color: var(--text-main); }
-
-        /* Evolution element (Wide) */
         .abcde-item.full { grid-column: span 2; margin-top: 4px; margin-bottom: 24px;}
 
         /* INSIGHT CARD */
@@ -71,24 +56,30 @@
         .insight-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; color: var(--blue); font-size: 13px; font-weight: 700; }
         .insight-text { font-size: 12.5px; line-height: 1.5; color: #444; }
 
-        /* OBSERVATION PLAN */
+        /* OBSERVATION PLAN - С дубликатом фото */
         .observation-card { background: #f4f7ff; border-radius: 28px; padding: 22px; border: 1.5px solid #eef2ff; position: relative; margin-bottom: 24px; }
         .premium-tag { position: absolute; top: 22px; right: 22px; font-size: 10px; font-weight: 800; color: var(--blue); }
-        .obs-title { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
-        .obs-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 22px; line-height: 1.4; }
+        .obs-title { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+        .obs-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 22px; }
         
         .timeline-visual { display: flex; align-items: center; gap: 15px; margin-bottom: 24px; }
-        .mole-frame { width: 50px; height: 50px; border-radius: 14px; background: #fff; box-shadow: var(--neu-inset); display: flex; align-items: center; justify-content: center; }
-        .mole-dot-static { width: 22px; height: 18px; background: #5c4033; border-radius: 40% 60% 70% 30%; }
-        .arrow { color: var(--blue); font-weight: bold; }
-        .next-frame { width: 50px; height: 50px; border-radius: 14px; border: 2.5px dashed #cbd5e0; display: flex; align-items: center; justify-content: center; color: #cbd5e0; font-size: 20px; font-weight: 700; }
+        
+        /* Продублированное фото в таймлайне */
+        .mole-frame-photo { 
+            width: 50px; height: 50px; border-radius: 14px; 
+            background-image: url('mole_photo.jpg'); 
+            background-size: cover; background-position: center;
+            box-shadow: var(--neu-inset); border: 2px solid #fff;
+        }
+        
+        .arrow { color: var(--blue); font-weight: bold; font-size: 18px; }
+        .next-frame { width: 50px; height: 50px; border-radius: 14px; border: 2px dashed #cbd5e0; display: flex; align-items: center; justify-content: center; color: #cbd5e0; font-size: 20px; font-weight: 700; }
         
         /* BUTTONS */
         .cta-primary { width: 100%; background: var(--blue); color: white; border: none; padding: 20px; border-radius: 22px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 8px 25px rgba(0,122,255,0.3); margin-bottom: 12px; transition: 0.2s; }
         .cta-secondary { width: 100%; background: var(--bg); color: var(--text-main); border: none; padding: 18px; border-radius: 22px; font-weight: 600; font-size: 15px; cursor: pointer; box-shadow: var(--neu-outset); transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         
-        .cta-primary:active { transform: scale(0.98); }
-        .cta-secondary:active { box-shadow: var(--neu-inset); transform: scale(0.98); }
+        .cta-primary:active, .cta-secondary:active { transform: scale(0.98); }
 
     </style>
 </head>
@@ -103,19 +94,19 @@
         <div class="result-header">
             <div class="mole-photo-preview"></div>
             
-            <div class="status-info">
-                <div class="status-badge">
-                    <span style="font-size: 18px;">✓</span>
-                    <h2>Все в порядке</h2>
+            <div class="status-block-combined">
+                <div class="status-title">
+                    <span>✓</span> Все в порядке
                 </div>
-                <div class="risk-text">Риск: Низкий (2%)</div>
+                <div class="status-subtitle">
+                    Риск: Низкий (2%)
+                </div>
             </div>
         </div>
 
         <div class="abcde-grid">
             <div class="abcde-item">
                 <span class="abcde-letter">A</span>
-                <div class="abcde-icon">⊕</div>
                 <div class="abcde-info">
                     <span class="abcde-label">Асимметрия</span>
                     <span class="abcde-val">Симметрично</span>
@@ -123,7 +114,6 @@
             </div>
             <div class="abcde-item">
                 <span class="abcde-letter">B</span>
-                <div class="abcde-icon">◎</div>
                 <div class="abcde-info">
                     <span class="abcde-label">Границы</span>
                     <span class="abcde-val">Четкие</span>
@@ -131,7 +121,6 @@
             </div>
             <div class="abcde-item">
                 <span class="abcde-letter">C</span>
-                <div class="abcde-icon">❂</div>
                 <div class="abcde-info">
                     <span class="abcde-label">Цвет</span>
                     <span class="abcde-val">Однородный</span>
@@ -139,7 +128,6 @@
             </div>
             <div class="abcde-item">
                 <span class="abcde-letter">D</span>
-                <div class="abcde-icon">⊘</div>
                 <div class="abcde-info">
                     <span class="abcde-label">Диаметр</span>
                     <span class="abcde-val">3.2 мм</span>
@@ -147,7 +135,6 @@
             </div>
             <div class="abcde-item full">
                 <span class="abcde-letter">E</span>
-                <div class="abcde-icon">🕒</div>
                 <div class="abcde-info">
                     <span class="abcde-label">Развитие</span>
                     <span class="abcde-val">Без изменений (Baseline)</span>
@@ -171,7 +158,7 @@
             <div class="obs-desc">ИИ сохранил снимок как эталон. Следующая проверка необходима через 180 дней.</div>
             
             <div class="timeline-visual">
-                <div class="mole-frame"><div class="mole-dot-static"></div></div>
+                <div class="mole-frame-photo"></div>
                 <div class="arrow">→</div>
                 <div class="next-frame">?</div>
                 <div>
@@ -191,17 +178,6 @@
         <div style="height: 40px;"></div>
     </div>
 </div>
-
-<script>
-    // Камера для фона (визуал)
-    async function initCamera() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-            document.getElementById('videoBg').srcObject = stream;
-        } catch (e) { console.log("Камера недоступна для фона"); }
-    }
-    window.onload = initCamera;
-</script>
 
 </body>
 </html>
