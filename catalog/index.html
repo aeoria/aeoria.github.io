@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aeoria App Catalog: every app and site from the studio</title>
+<meta name="description" content="A plain guide to every Aeoria app and website: field calculators for electricians and builders, study apps, a homework planner, pet, craft and wellness sites, plus the studio's dev and marketing services.">
+<link rel="canonical" href="https://aeoria.github.io/catalog/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aeoria App Catalog">
+<meta property="og:description" content="Every app and website from the Aeoria studio, with a detailed description of what each one does and who it is for.">
+<meta property="og:url" content="https://aeoria.github.io/catalog/">
+<meta name="color-scheme" content="light dark">
+<style>
+:root{
+  --bg:#f6f5f2;--surface:#ffffff;--ink:#1d1f23;--muted:#5b616b;--line:#e3e1dc;
+  --accent:#2457d6;--accent-ink:#ffffff;--chip:#eef1f8;--chip-ink:#2b3a63;
+  --radius:14px;--max:1080px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#121417;--surface:#1b1e23;--ink:#ecedef;--muted:#a3a9b3;--line:#2c3038;
+    --accent:#7aa2ff;--accent-ink:#0d1117;--chip:#232a38;--chip-ink:#c9d6f5;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+a:hover{text-decoration-thickness:2px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 16px}
+header.top{border-bottom:1px solid var(--line);background:var(--surface)}
+header.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:14px;padding-bottom:14px}
+.brand{font-weight:700;text-decoration:none;color:var(--ink);letter-spacing:-.01em}
+header.top nav a{font-size:.92rem;color:var(--muted);text-decoration:none}
+.hero{padding:56px 0 28px}
+.hero h1{font-size:clamp(1.9rem,4.5vw,2.8rem);line-height:1.15;letter-spacing:-.02em;max-width:22ch}
+.hero p{color:var(--muted);font-size:1.08rem;max-width:66ch;margin-top:16px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:28px 0 8px}
+.toc a{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.9rem;text-decoration:none;color:var(--ink)}
+.toc a:hover{border-color:var(--accent)}
+section.group{padding:36px 0 8px}
+section.group>h2{font-size:1.5rem;letter-spacing:-.01em}
+section.group>p.lede{color:var(--muted);max-width:70ch;margin-top:6px}
+.grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:20px}
+@media (min-width:860px){.grid{grid-template-columns:1fr 1fr}}
+article.site{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:12px;scroll-margin-top:16px}
+article.site h3{font-size:1.22rem;line-height:1.3}
+article.site h3 a{color:var(--ink);text-decoration:none}
+article.site h3 a:hover{color:var(--accent)}
+.host{font-size:.88rem;color:var(--muted);word-break:break-all}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--chip);color:var(--chip-ink);border-radius:6px;padding:2px 8px;font-size:.78rem;font-weight:600}
+article.site p{color:var(--ink)}
+article.site h4{font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:4px}
+article.site ul{padding-left:1.1em;display:grid;gap:4px}
+article.site li::marker{color:var(--muted)}
+.links{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:.93rem;margin-top:auto;padding-top:6px;border-top:1px dashed var(--line)}
+.visit{display:inline-block;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:600;border-radius:10px;padding:8px 14px;font-size:.93rem}
+.note{font-size:.88rem;color:var(--muted)}
+footer{border-top:1px solid var(--line);margin-top:48px;padding:28px 0 40px;color:var(--muted);font-size:.9rem}
+footer p+p{margin-top:8px}
+</style>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"CollectionPage",
+  "name":"Aeoria App Catalog",
+  "url":"https://aeoria.github.io/catalog/",
+  "description":"Every app and website from the Aeoria studio, with a detailed description of each.",
+  "mainEntity":{
+    "@type":"ItemList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"Aeoria studio","url":"https://aeoriaapps.com/"},
+      {"@type":"ListItem","position":2,"name":"Aeoria Development","url":"https://dev.aeoriaapps.com/"},
+      {"@type":"ListItem","position":3,"name":"Aeoria Marketing","url":"https://marketing.aeoriaapps.com/"},
+      {"@type":"ListItem","position":4,"name":"Box Fill Check","url":"https://boxfillcheck.aeoriaapps.com/"},
+      {"@type":"ListItem","position":5,"name":"Fault Current & SCCR Label","url":"https://sccr.aeoriaapps.com/"},
+      {"@type":"ListItem","position":6,"name":"Hydronic Calculator","url":"https://hydroniccalc.aeoriaapps.com/"},
+      {"@type":"ListItem","position":7,"name":"Drywall Calculator & Estimator","url":"https://drywall.aeoriaapps.com/"},
+      {"@type":"ListItem","position":8,"name":"Rise & Run stair stringer calculator","url":"https://stairstringer.aeoriaapps.com/"},
+      {"@type":"ListItem","position":9,"name":"LayExact tile layout planner","url":"https://layexact.aeoriaapps.com/"},
+      {"@type":"ListItem","position":10,"name":"Contractor Estimate Maker","url":"https://contractorpdf.aeoriaapps.com/"},
+      {"@type":"ListItem","position":11,"name":"RE Shots","url":"https://reshots.aeoriaapps.com/"},
+      {"@type":"ListItem","position":12,"name":"Laneo","url":"https://laneo.aeoriaapps.com/"},
+      {"@type":"ListItem","position":13,"name":"Memvi","url":"https://memvi.aeoriaapps.com/"},
+      {"@type":"ListItem","position":14,"name":"Chiply","url":"https://chiply.aeoriaapps.com/"},
+      {"@type":"ListItem","position":15,"name":"Starlo","url":"https://mockinterview.aeoriaapps.com/"},
+      {"@type":"ListItem","position":16,"name":"CrochetZen","url":"https://crochetzen.com/"},
+      {"@type":"ListItem","position":17,"name":"PuppyMethod","url":"https://dogsapp.aeoriaapps.com/"},
+      {"@type":"ListItem","position":18,"name":"Dr. Kegel","url":"https://kegelmethod.com/"},
+      {"@type":"ListItem","position":19,"name":"AI Mole Scanner","url":"https://aeoria.github.io/ai_molescanner"}
+    ]
+  }
+}
+</script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/">Aeoria</a>
+    <nav><a href="/catalog/">App catalog</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <h1>Every app and site from the Aeoria studio</h1>
+    <p>Aeoria is a small studio that builds iOS apps, web products and the websites that explain them. This page lists every product site we run, with a plain description of what each one does, who it is for, what is free and where to start reading. Most of the apps work offline and need no account; where that is not true, the description says so.</p>
+    <nav class="toc" aria-label="Sections">
+      <a href="#studio">Studio and services</a>
+      <a href="#trades">Field tools for trades</a>
+      <a href="#learning">Study and school</a>
+      <a href="#hobbies">Crafts and pets</a>
+      <a href="#wellness">Wellness</a>
+    </nav>
+  </div>
+
+  <!-- ============ STUDIO ============ -->
+  <section class="group" id="studio">
+    <h2>Studio and services</h2>
+    <p class="lede">The studio itself and the two service practices behind the apps on this page.</p>
+    <div class="grid">
+
+      <article class="site" id="aeoria-studio">
+        <h3><a href="https://aeoriaapps.com/">Aeoria studio</a></h3>
+        <div class="host">aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Studio</span><span class="chip">iOS</span><span class="chip">Web</span></div>
+        <p>The home page of the studio. Aeoria makes iOS apps, web products, and the marketing that carries them. The studio's own portfolio covers field calculators for electricians and builders, study apps, a homework planner and a few consumer sites, and the same team takes on client work through the development and marketing practices below.</p>
+        <p>Start here if you want to know who is behind the apps on this page or how to get in touch with the studio.</p>
+        <div class="links"><a class="visit" href="https://aeoriaapps.com/">Visit aeoriaapps.com</a></div>
+      </article>
+
+      <article class="site" id="aeoria-dev">
+        <h3><a href="https://dev.aeoriaapps.com/">Aeoria Development</a></h3>
+        <div class="host">dev.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Service</span><span class="chip">iOS development</span><span class="chip">Web products</span><span class="chip">EN / PL</span></div>
+        <p>The development practice of the studio. Aeoria designs and builds iOS apps and web products under a fixed written scope: you describe the product, you get a written scope and a quote, and the build follows that document. There is no public rate card and no Android offer on this site.</p>
+        <h4>What the site covers</h4>
+        <ul>
+          <li>iOS app development, web product development and mobile product development as separate offers.</li>
+          <li>Expo and React Native, the stacks the studio ships its own portfolio on; SwiftUI and other stacks as scoped builds.</li>
+          <li>App Store release work and post-release support, including TestFlight and update cycles.</li>
+          <li>A short fit quiz that ends in a written scope request, plus a full Polish version of the key pages.</li>
+        </ul>
+        <div class="links">
+          <a class="visit" href="https://dev.aeoriaapps.com/">Visit the dev site</a>
+          <a href="https://dev.aeoriaapps.com/ios-app-development">iOS app development</a>
+          <a href="https://dev.aeoriaapps.com/expo">Expo</a>
+          <a href="https://dev.aeoriaapps.com/app-store-release">App Store release</a>
+        </div>
+      </article>
+
+      <article class="site" id="aeoria-marketing">
+        <h3><a href="https://marketing.aeoriaapps.com/">Aeoria Marketing</a></h3>
+        <div class="host">marketing.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Service</span><span class="chip">ASO</span><span class="chip">Apple Search Ads</span><span class="chip">Product sites</span></div>
+        <p>The marketing practice of the studio: App Store Optimization, Apple Search Ads planning and product marketing websites, sold as scoped sprints rather than open-ended retainers. The site is explicit that it does not promise rankings; you get a written quote after a short quiz.</p>
+        <h4>What the site covers</h4>
+        <ul>
+          <li>ASO: keyword research, metadata and screenshot planning for App Store listings.</li>
+          <li>Apple Search Ads: campaign structure and budget planning for app launches.</li>
+          <li>Product sites: static, crawlable marketing sites like the ones listed on this page.</li>
+          <li>Guides on mobile app marketing, case notes from studio work, and a Polish home page.</li>
+        </ul>
+        <div class="links">
+          <a class="visit" href="https://marketing.aeoriaapps.com/">Visit the marketing site</a>
+          <a href="https://marketing.aeoriaapps.com/aso">ASO</a>
+          <a href="https://marketing.aeoriaapps.com/apple-search-ads">Apple Search Ads</a>
+          <a href="https://marketing.aeoriaapps.com/guides">Guides</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ TRADES ============ -->
+  <section class="group" id="trades">
+    <h2>Field tools for trades</h2>
+    <p class="lede">Offline iPhone calculators for electricians, plumbers and heating installers, drywall and tile crews, deck and stair builders, contractors and real estate photographers. Each one does its core job for free and sells a one-time Pro unlock for job lists, PDFs and multi-room work. Each site also carries how-to guides and printable field checklists that are useful on their own, with or without the app.</p>
+    <div class="grid">
+
+      <article class="site" id="boxfillcheck">
+        <h3><a href="https://boxfillcheck.aeoriaapps.com/">Box Fill Check</a></h3>
+        <div class="host">boxfillcheck.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Electricians</span><span class="chip">NEC 314.16</span><span class="chip">iPhone</span><span class="chip">Offline</span></div>
+        <p>An NEC electrical box fill calculator for electricians and inspectors. You pick the box, add conductors, devices, clamps and grounds, and the app tells you right away whether the box passes, how much spare volume is left and how many more wires would fit. It answers the question every rough-in raises: will the wires fit this box?</p>
+        <h4>Free</h4>
+        <ul>
+          <li>NEC 2017, 2020 and 2023 edition picker.</li>
+          <li>Standard metal boxes from Table 314.16(A), or the volume stamped on the box.</li>
+          <li>Smallest passing box picker and history of the last 50 boxes.</li>
+        </ul>
+        <h4>Pro, one-time unlock</h4>
+        <ul>
+          <li>Whole job by rooms with a box list and pass count.</li>
+          <li>Plaster and extension rings using stamped volume.</li>
+          <li>Inspector PDF box schedule with code edition and date; templates such as kitchen GFCI, double switch and 4-11/16 splice.</li>
+          <li>Mexico (NOM-001-SEDE) mode using NEC 2017 box fill rules.</li>
+        </ul>
+        <p class="note">Conduit percent fill and Canada CEC mode are deliberately not in this version.</p>
+        <div class="links">
+          <a class="visit" href="https://boxfillcheck.aeoriaapps.com/">Visit Box Fill Check</a>
+          <a href="https://boxfillcheck.aeoriaapps.com/guides/how-to-calculate-box-fill-nec-314-16">How to calculate box fill</a>
+          <a href="https://boxfillcheck.aeoriaapps.com/boost/egc-quarter-allowance-2020">EGC allowance 2020</a>
+        </div>
+      </article>
+
+      <article class="site" id="sccr">
+        <h3><a href="https://sccr.aeoriaapps.com/">Fault Current &amp; SCCR Label</a></h3>
+        <div class="host">sccr.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Electricians</span><span class="chip">NEC 110.24</span><span class="chip">iPhone</span><span class="chip">Offline</span></div>
+        <p>An available fault current calculator for commercial electrical work. Start from a utility letter or an infinite bus, enter the transformer kVA, secondary voltage and %Z, add the feeder run, and the app gives you available fault current at the transformer terminals and at the equipment, in amps and kA. It then compares that number with the equipment's AIC or SCCR and shows pass or fail, so you can prepare the NEC 110.24 field marking.</p>
+        <h4>Free</h4>
+        <ul>
+          <li>One calculation point with one feeder (material, raceway, size, length, parallel sets).</li>
+          <li>Optional impedance tolerance for a worst-case result.</li>
+          <li>One AIC or SCCR comparison with pass or fail.</li>
+        </ul>
+        <h4>Pro, one-time unlock</h4>
+        <ul>
+          <li>Unlimited point tree from the main panel to subpanels to equipment, with motor contribution.</li>
+          <li>Continue downstream from a known current in a utility letter or a measured value.</li>
+          <li>Printable NEC 110.24 labels (4x2 in, 4x3 in, A6), an equipment list with SCCR status, and a method PDF for the inspector.</li>
+        </ul>
+        <p class="note">A field aid, not an engineering stamp.</p>
+        <div class="links">
+          <a class="visit" href="https://sccr.aeoriaapps.com/">Visit the SCCR site</a>
+          <a href="https://sccr.aeoriaapps.com/guides/point-to-point-fault-current">Point-to-point method</a>
+          <a href="https://sccr.aeoriaapps.com/guides/sccr-vs-aic">SCCR vs AIC</a>
+        </div>
+      </article>
+
+      <article class="site" id="hydroniccalc">
+        <h3><a href="https://hydroniccalc.aeoriaapps.com/">Hydronic Calculator</a></h3>
+        <div class="host">hydroniccalc.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Heating installers</span><span class="chip">Boilers &amp; heat pumps</span><span class="chip">iPhone</span><span class="chip">Offline</span></div>
+        <p>Job-site hydronic math for boiler and heat pump work, built to give an answer in about thirty seconds in the truck. Enter the load and the temperature drop and get flow in GPM; check pipe velocity and head loss; size an expansion tank, a circulator duty point and radiators. Units switch live between US and metric, and heat pump ΔT presets are built in.</p>
+        <h4>Free</h4>
+        <ul>
+          <li>Flow mode: BTU to GPM from load and ΔT.</li>
+          <li>Pipe sizing: velocity and head loss for copper, PEX, steel and PP-R.</li>
+          <li>One saved project and five history rows.</li>
+        </ul>
+        <h4>Pro, one-time unlock</h4>
+        <ul>
+          <li>Expansion tank acceptance volume and pre-charge.</li>
+          <li>Circulator head and duty point before you read a pump curve.</li>
+          <li>Radiator, radiant and baseboard output at your system ΔT, glycol corrections for 30, 40 and 50% mixes, and a one-page PDF job report.</li>
+        </ul>
+        <div class="links">
+          <a class="visit" href="https://hydroniccalc.aeoriaapps.com/">Visit Hydronic Calculator</a>
+          <a href="https://hydroniccalc.aeoriaapps.com/how-it-works">How it works</a>
+          <a href="https://hydroniccalc.aeoriaapps.com/guides">Guides</a>
+        </div>
+      </article>
+
+      <article class="site" id="drywall">
+        <h3><a href="https://drywall.aeoriaapps.com/">Drywall Calculator &amp; Estimator</a></h3>
+        <div class="host">drywall.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Drywall</span><span class="chip">Takeoff</span><span class="chip">iPhone</span><span class="chip">Offline</span></div>
+        <p>A drywall takeoff calculator. Enter a room and get the number of sheets, screws, joint compound, tape and corner bead, plus a basic stud layout. Door and window openings are deducted from presets or custom sizes, and you can choose the sheet size, orientation and waste percent to see how the order changes.</p>
+        <h4>Free, one room</h4>
+        <ul>
+          <li>Sheet sizes 4x8, 4x10, 4x12, 54x12 and metric 1200 x 2400, 2500 and 3000 mm.</li>
+          <li>Sheets, screws, mud, tape and corner bead; stud counts at 16"/24" or 400/600 mm.</li>
+          <li>Wall layout diagram in US or metric units.</li>
+        </ul>
+        <h4>Pro, one-time unlock</h4>
+        <ul>
+          <li>Multi-room projects with combined totals and a sheet-length optimizer.</li>
+          <li>Cost tab with unit prices, labor, markup and tax; PDF material list and quote.</li>
+          <li>Metal framing detail, board types, finish levels 0 to 5, primer and paint coverage, supplier price lists.</li>
+        </ul>
+        <div class="links">
+          <a class="visit" href="https://drywall.aeoriaapps.com/">Visit the drywall site</a>
+          <a href="https://drywall.aeoriaapps.com/guides/how-many-drywall-sheets">How many sheets for a room</a>
+          <a href="https://drywall.aeoriaapps.com/guides/choose-4x8-4x10-or-4x12">4x8, 4x10 or 4x12</a>
+        </div>
+      </article>
+
+      <article class="site" id="stairstringer">
+        <h3><a href="https://stairstringer.aeoriaapps.com/">Rise &amp; Run: stair stringer calculator</a></h3>
+        <div class="host">stairstringer.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Carpentry</span><span class="chip">Decks &amp; basements</span><span class="chip">iPhone</span><span class="chip">Offline</span></div>
+        <p>A stair stringer calculator that starts from total rise. Measure the rise, and the app offers several equal riser and tread combinations, each checked against the code limits you select (IRC, IBC or your own), with total run, angle and stringer length. It accounts for tread thickness and top finish on the first and last riser, shows the throat left after the notch and suggests whether a 2x10 or 2x12 will do.</p>
+        <h4>Free</h4>
+        <ul>
+          <li>Riser and tread options with run, angle and stringer length.</li>
+          <li>Code presets, throat check and board hint.</li>
+          <li>Last 50 calculations stored on the device; no ads, no account.</li>
+        </ul>
+        <h4>Pro, one-time unlock</h4>
+        <ul>
+          <li>Full-size 1:1 notch template to print on Letter or A4.</li>
+          <li>Framing square settings and a cut list for stringers, treads and risers.</li>
+          <li>Landings, L-shaped and U-shaped stairs, deck and basement layouts with headroom at the opening, and a PDF for the client or inspector.</li>
+        </ul>
+        <div class="links">
+          <a class="visit" href="https://stairstringer.aeoriaapps.com/">Visit Rise &amp; Run</a>
+          <a href="https://stairstringer.aeoriaapps.com/how-it-works">From rise to a marked cut</a>
+          <a href="https://stairstringer.aeoriaapps.com/use-cases">Use cases</a>
+        </div>
+      </article>
+
+      <article class="site" id="layexact">
+        <h3><a href="https://layexact.aeoriaapps.com/">LayExact: tile layout planner</a></h3>
+        <div class="host">layexact.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Tile setters</span><span class="chip">iPhone &amp; iPad</span><span class="chip">No ads</span><span class="chip">Offline</span></div>
+        <p>A tile layout planner for iPhone and iPad that is built around one problem: thin slivers of tile at the walls. LayExact auto-centers rows and columns so you see the edge cuts before you make them, then produces an exact cut list with pairing suggestions (cut once, use both pieces), material counts and a PDF quote you can send to the client.</p>
+        <h4>What it does</h4>
+        <ul>
+          <li>Auto-centering for rows and columns; running bond and grid offsets, herringbone, chevron and diagonal patterns.</li>
+          <li>Exact cut list with pairing, so offcuts get reused instead of wasted.</li>
+          <li>Tile box counts, grout and thinset from the layout.</li>
+          <li>PDF quote with an optional company logo; millimetres and inches.</li>
+        </ul>
+        <p class="note">Free for one project. Calculations run on the device; the network is used only for purchases. No account, no ads.</p>
+        <div class="links">
+          <a class="visit" href="https://layexact.aeoriaapps.com/">Visit LayExact</a>
+          <a href="https://layexact.aeoriaapps.com/guides/avoid-thin-tile-slivers">Avoid thin tile slivers</a>
+          <a href="https://layexact.aeoriaapps.com/guides/herringbone-chevron-layout-waste">Herringbone waste</a>
+        </div>
+      </article>
+
+      <article class="site" id="contractorpdf">
+        <h3><a href="https://contractorpdf.aeoriaapps.com/">Contractor Estimate Maker</a></h3>
+        <div class="host">contractorpdf.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Contractors</span><span class="chip">Estimates &amp; invoices</span><span class="chip">iPhone</span><span class="chip">Offline</span></div>
+        <p>Paperwork for contractors who quote on site. Build an estimate from a trade catalog, get the client's signature on your phone, then turn the accepted estimate into an invoice without retyping. Change orders are first class: describe the extra work, price the add or deduct, update the contract sum and capture a separate signature before the work starts. Everything goes out as a PDF.</p>
+        <h4>What it does</h4>
+        <ul>
+          <li>Catalogs for HVAC, plumbing, electrical, roofing, painting, handyman, carpentry, flooring, landscaping, cleaning and general contracting.</li>
+          <li>Quantities and prices, discount, up to two taxes, deposit, notes and terms.</li>
+          <li>On-phone signature with printed name, date, time and a document fingerprint on a certificate page.</li>
+          <li>Classic PDF template on Free; Modern and Bold templates with logo and brand color, unlimited photos and one-file backup on Pro.</li>
+        </ul>
+        <p class="note">Documents, clients and the catalog stay on the device. No account.</p>
+        <div class="links">
+          <a class="visit" href="https://contractorpdf.aeoriaapps.com/">Visit Contractor Estimate Maker</a>
+          <a href="https://contractorpdf.aeoriaapps.com/guides/change-order-form">Change order form</a>
+          <a href="https://contractorpdf.aeoriaapps.com/guides/estimate-to-invoice">Estimate to invoice</a>
+        </div>
+      </article>
+
+      <article class="site" id="reshots">
+        <h3><a href="https://reshots.aeoriaapps.com/">RE Shots: AI real estate photo editor</a></h3>
+        <div class="host">reshots.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Real estate</span><span class="chip">Listing photos</span><span class="chip">iPhone</span></div>
+        <p>A listing photo editor for agents and real estate photographers. RE Shots takes care of the edits listings need most: window pull so the view outside is visible, sky replacement on exteriors, day-to-dusk twilight, vertical correction and auto enhance. You review before and after, then batch export MLS-ready files while the originals are kept untouched.</p>
+        <h4>What the site covers</h4>
+        <ul>
+          <li>Each edit type explained, with what it can and cannot fix.</li>
+          <li>Pricing in AI credits, with Pro, a Listing Pack and Top-Ups.</li>
+          <li>Guides on disclosing digitally altered photos, including a California AB 723 checklist.</li>
+        </ul>
+        <p class="note">iPhone first; no account required.</p>
+        <div class="links">
+          <a class="visit" href="https://reshots.aeoriaapps.com/">Visit RE Shots</a>
+          <a href="https://reshots.aeoriaapps.com/guides/window-pull-listing-photos">Window pull</a>
+          <a href="https://reshots.aeoriaapps.com/guides/digitally-altered-disclosure">Altered photo disclosure</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ LEARNING ============ -->
+  <section class="group" id="learning">
+    <h2>Study and school</h2>
+    <p class="lede">iPhone apps for people preparing for something specific: a driving permit test, an English exam, a job interview, or simply the next assignment.</p>
+    <div class="grid">
+
+      <article class="site" id="laneo">
+        <h3><a href="https://laneo.aeoriaapps.com/">Laneo: DMV permit practice</a></h3>
+        <div class="host">laneo.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Driving permit</span><span class="chip">13 US states</span><span class="chip">iPhone</span><span class="chip">Offline</span></div>
+        <p>A study app for the US car permit (learner's) test that follows your own state's handbook rather than a generic national question bank. Every answer comes with an explanation, so you learn the rule instead of memorizing a letter. One readiness score tells you honestly how close you are and which topics are weakest, and a daily plan counts down to your test date.</p>
+        <h4>What it does</h4>
+        <ul>
+          <li>State-specific questions, with a full practice exam that uses your state's question count and passing score.</li>
+          <li>Road signs by shape and color, mistakes review until weak spots stick, and a plain-words handbook summary.</li>
+          <li>Works offline, no account; progress stays on the device.</li>
+        </ul>
+        <p class="note">An independent product, not affiliated with any DMV.</p>
+        <div class="links">
+          <a class="visit" href="https://laneo.aeoriaapps.com/">Visit Laneo</a>
+          <a href="https://laneo.aeoriaapps.com/guides/california-permit-practice">California permit practice</a>
+          <a href="https://laneo.aeoriaapps.com/guides/road-signs">Road signs</a>
+        </div>
+      </article>
+
+      <article class="site" id="memvi">
+        <h3><a href="https://memvi.aeoriaapps.com/">Memvi: English vocabulary flashcards</a></h3>
+        <div class="host">memvi.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">English learners</span><span class="chip">SAT / GRE / IELTS words</span><span class="chip">iPhone</span></div>
+        <p>An English vocabulary app built on picture flashcards: each word gets an image and a tiny memory story, and spaced repetition brings the card back right before you would forget it. It works for everyday English from A2 to C1 and for exam vocabulary, with a daily plan toward a test date.</p>
+        <h4>What it does</h4>
+        <ul>
+          <li>Spaced reviews and a forecast of the words you are about to forget.</li>
+          <li>SAT, GRE and IELTS word packs (not official exam products) and general English levels.</li>
+          <li>Your own words, added by hand or from a CSV, with an optional AI memory trick.</li>
+          <li>US and UK pronunciation audio, offline after a deck downloads; streaks and a weekly recap.</li>
+        </ul>
+        <p class="note">No account; progress stays on the device.</p>
+        <div class="links">
+          <a class="visit" href="https://memvi.aeoriaapps.com/">Visit Memvi</a>
+          <a href="https://memvi.aeoriaapps.com/guides/spaced-repetition-vocabulary">Spaced repetition</a>
+          <a href="https://memvi.aeoriaapps.com/guides/exam-vocab-30-day-plan">30-day exam vocab plan</a>
+        </div>
+      </article>
+
+      <article class="site" id="chiply">
+        <h3><a href="https://chiply.aeoriaapps.com/">Chiply: homework planner</a></h3>
+        <div class="host">chiply.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Students</span><span class="chip">Assignments</span><span class="chip">iPhone</span></div>
+        <p>A homework planner and assignment tracker for students who want to plan work before it is due instead of the night before. Add an assignment in a few taps, let Chiply split a big essay, lab or project into dated steps, and see on one screen what is due today, this week and what slipped.</p>
+        <h4>What it does</h4>
+        <ul>
+          <li>Class schedule with weekly, A/B and block rotations, term dates and breaks.</li>
+          <li>Optional AI steps that turn a large assignment into dated tasks.</li>
+          <li>Today, Week and List views; several reminders per assignment; a suggested plan for tonight and the week.</li>
+          <li>Home Screen widget and a weekly summary with your on-time rate.</li>
+        </ul>
+        <p class="note">Phone only; no account required.</p>
+        <div class="links">
+          <a class="visit" href="https://chiply.aeoriaapps.com/">Visit Chiply</a>
+          <a href="https://chiply.aeoriaapps.com/guides/break-essay-into-dated-steps">Break an essay into steps</a>
+          <a href="https://chiply.aeoriaapps.com/guides/plan-a-heavy-homework-week">Plan a heavy week</a>
+        </div>
+      </article>
+
+      <article class="site" id="starlo">
+        <h3><a href="https://mockinterview.aeoriaapps.com/">Starlo: mock interview practice</a></h3>
+        <div class="host">mockinterview.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Job seekers</span><span class="chip">STAR method</span><span class="chip">Voice</span><span class="chip">iPhone</span></div>
+        <p>A voice mock interview app. You answer interview questions out loud, and Starlo breaks your answer into the four STAR parts (Situation, Task, Action, Result) so you can see which one is missing or weak. Retry just that part and compare attempts side by side to hear the second take improve.</p>
+        <h4>What it does</h4>
+        <ul>
+          <li>Questions for your role, or generated from a pasted job post.</li>
+          <li>Full mock interviews with follow-up questions based on what you said.</li>
+          <li>One-way interview practice with think time and a countdown; MMI-style stations.</li>
+          <li>Delivery check for pace, filler words and answer length, plus a plan up to interview day.</li>
+        </ul>
+        <p class="note">A practice tool only; not a job offer or admissions advice.</p>
+        <div class="links">
+          <a class="visit" href="https://mockinterview.aeoriaapps.com/">Visit Starlo</a>
+          <a href="https://mockinterview.aeoriaapps.com/guides/star-method">STAR method</a>
+          <a href="https://mockinterview.aeoriaapps.com/guides/one-way-tips">One-way interview tips</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ HOBBIES ============ -->
+  <section class="group" id="hobbies">
+    <h2>Crafts and pets</h2>
+    <p class="lede">Sites with free guides and calculators for everyday hobbies, each with its own app or tools.</p>
+    <div class="grid">
+
+      <article class="site" id="crochetzen">
+        <h3><a href="https://crochetzen.com/">CrochetZen</a></h3>
+        <div class="host">crochetzen.com</div>
+        <div class="chips"><span class="chip">Crochet &amp; knitting</span><span class="chip">Patterns</span><span class="chip">iOS app</span></div>
+        <p>A mindful AI companion for crochet and knitting. The CrochetZen app helps you spot dropped stitches in seconds and keep your patterns organized, with a calm design meant to keep crafting relaxing rather than stressful.</p>
+        <h4>What the site covers</h4>
+        <ul>
+          <li>A blog with guides to crochet and knitting.</li>
+          <li>A stitch library and pattern pages.</li>
+          <li>Yarn pages to help pick the right yarn for a project.</li>
+        </ul>
+        <div class="links">
+          <a class="visit" href="https://crochetzen.com/">Visit CrochetZen</a>
+          <a href="https://crochetzen.com/blog/">Blog</a>
+          <a href="https://crochetzen.com/stitches">Stitch library</a>
+        </div>
+      </article>
+
+      <article class="site" id="puppymethod">
+        <h3><a href="https://dogsapp.aeoriaapps.com/">PuppyMethod</a></h3>
+        <div class="host">dogsapp.aeoriaapps.com</div>
+        <div class="chips"><span class="chip">Dog owners</span><span class="chip">Calculators</span><span class="chip">Breeds</span><span class="chip">EN / DE</span></div>
+        <p>A practical site for dog owners. PuppyMethod has free calculators for the questions owners search most, breed pages on adult size and lifespan, and plain summaries of where you can and cannot take your dog, from airlines to big-box stores.</p>
+        <h4>What the site covers</h4>
+        <ul>
+          <li>Dog age calculator (dog years to human years) and puppy weight calculator for adult size.</li>
+          <li>Breed size and lifespan pages: Golden Retriever, Labrador Retriever, French Bulldog, German Shepherd, Goldendoodle, Chihuahua.</li>
+          <li>Dog-friendly guides for Delta, United, American, Southwest and JetBlue, and for Target, Walmart, IKEA US and Starbucks.</li>
+          <li>A German-language section with local rules.</li>
+        </ul>
+        <div class="links">
+          <a class="visit" href="https://dogsapp.aeoriaapps.com/">Visit PuppyMethod</a>
+          <a href="https://dogsapp.aeoriaapps.com/tools/dog-age-calculator/">Dog age calculator</a>
+          <a href="https://dogsapp.aeoriaapps.com/dog-friendly/">Dog-friendly places</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ WELLNESS ============ -->
+  <section class="group" id="wellness">
+    <h2>Wellness</h2>
+    <p class="lede">Educational sites and self-tracking tools. None of them diagnose anything or replace a doctor.</p>
+    <div class="grid">
+
+      <article class="site" id="drkegel">
+        <h3><a href="https://kegelmethod.com/">Dr. Kegel</a></h3>
+        <div class="host">kegelmethod.com</div>
+        <div class="chips"><span class="chip">Pelvic floor</span><span class="chip">Men &amp; women</span><span class="chip">Free tools</span></div>
+        <p>Pelvic floor training with two programs built separately for men's and women's anatomy. Each side of the site has a free kegel timer, short self-checks and a seven-day starting plan, and explains when the right exercise is a reverse kegel (relaxation) rather than more squeezing.</p>
+        <h4>What the site covers</h4>
+        <ul>
+          <li>For men: kegel exercises, after-dribble, reverse kegels, a 7-day start and a pelvic floor self-test.</li>
+          <li>For women: kegel exercises, bladder leaks, postpartum recovery after birth, reverse kegels and a 7-day start.</li>
+          <li>"Tight or weak?" check, guidance on when to talk to your doctor, an editorial policy and medical review notes.</li>
+        </ul>
+        <p class="note">Education and exercise guidance, not medical advice.</p>
+        <div class="links">
+          <a class="visit" href="https://kegelmethod.com/">Visit kegelmethod.com</a>
+          <a href="https://kegelmethod.com/men/tools/kegel-timer/">Kegel timer for men</a>
+          <a href="https://kegelmethod.com/women/tools/kegel-timer/">Kegel timer for women</a>
+        </div>
+      </article>
+
+      <article class="site" id="molescanner">
+        <h3><a href="https://aeoria.github.io/ai_molescanner">AI Mole Scanner</a></h3>
+        <div class="host">aeoria.github.io/ai_molescanner</div>
+        <div class="chips"><span class="chip">Skin checks</span><span class="chip">iPhone</span></div>
+        <p>An iPhone app for keeping an eye on your skin. You photograph moles and skin spots, the app analyzes each image and keeps a history, so changes in size, shape or color over time are easier to notice and to show a dermatologist. The page also includes a library of more than 50 skin conditions, from common benign moles to pre-cancerous and malignant lesions, with a short plain description of how each one usually looks.</p>
+        <p class="note">A tracking and education tool, not a diagnosis. Any spot that changes, bleeds or worries you should be checked by a doctor.</p>
+        <div class="links">
+          <a class="visit" href="https://aeoria.github.io/ai_molescanner">Visit AI Mole Scanner</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Aeoria App Catalog. Updated October 2026.</p>
+    <p>Prices, platforms and features change between app versions; each product site has the current details. <a href="/">Back to the home page</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>
